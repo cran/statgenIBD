@@ -1,0 +1,37 @@
+CXX_STD = CXX11
+PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+# Default make file
+PKG_CPPFLAGS = \
+ -I. \
+ -Igeneral\
+ -Ipedigree
+
+# Include all C++ files in src/ and its subdirectories
+PKG_SOURCES = \
+        calcIBD.cpp\
+        RcppExports.cpp\
+        general/HMMalgo.cpp\
+        general/InhVector.cpp\
+        general/ibdexcept.cpp\
+        general/misc.cpp\
+        general/OrdGeno.cpp\
+        general/TransMatSym2D.cpp\
+        general/util_genetics.cpp\
+        pedigree/analysis_fam.cpp\
+        pedigree/crosses.cpp\
+        pedigree/Loc.cpp\
+        pedigree/mainR.cpp\
+        pedigree/markerscore.cpp\
+        pedigree/popt.cpp\
+        pedigree/read_map.cpp
+
+# Obtain the object files
+OBJECTS = $(PKG_SOURCES:.cpp=.o)
+
+# Make the shared object
+all: clean $(SHLIB)
+
+# Provide recipe to remove all objects
+clean:
+	rm -f $(OBJECTS)

@@ -1,0 +1,16 @@
+rm -f \
+  src/general/HMMalgo.o\
+  src/general/InhVector.o\
+  src/general/OrdGeno.o\
+  src/general/TransMatSym2D.o\
+  src/general/matvec.o\
+  src/general/ibdexcept.o\
+  src/general/misc.o\
+  src/general/util_genetics.o\
+  src/pedigree/Loc.o\
+  src/pedigree/analysis_fam.o\
+  src/pedigree/crosses.o\
+  src/pedigree/mainR.o\
+  src/pedigree/markerscore.o\
+  src/pedigree/popt.o\
+  src/pedigree/read_map.o
