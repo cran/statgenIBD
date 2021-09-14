@@ -101,7 +101,7 @@ head(SxM_probs)
 
 ## ----SxMwriteFlapjack, eval=FALSE-------------------------------------------------------
 #  ## Write results to Flapjack format.
-#  writeFlapjack(SxMIBD,
+#  writeFlapjack(SxMIB_Ext,
 #                outFileMap = "map.txt",
 #                outFileGeno = "geno.txt")
 

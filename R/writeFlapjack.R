@@ -40,16 +40,31 @@ writeFlapjack <- function(IBDprob,
   nPar <- length(parents)
   nGeno <- dim(markers)[[2]]
   nMarkers <- dim(markers)[[1]]
-  ## Convert to long format.
-  markersLong <- markers3DtoLong(IBDprob)
-  markersWide <- reshape(data = markersLong, idvar = c("genotype", "snp"),
-                         timevar = "parent", direction = "wide")
-  for (i in 1:nrow(markersWide)) {
-     parentsI <- parents[markersWide[i , 3:(2 + nPar)] > (0.85 / nPar)]
-     markersWide[i, "res"] <- paste0(parentsI, collapse = "/")
+  ## Use first marker to get parent combinations present in output.
+  mrk1 <- rownames(markers)[1]
+  parVals <- colnames(getProbs(IBDprob, mrk1))[-1]
+  parVals <- gsub(pattern = paste0(mrk1, "_"), replacement = "", x = parVals)
+  for (i in seq_along(parents)) {
+    parVals <- gsub(pattern = parents[i],
+                    replacement = paste0(i, "/"), x = parVals)
   }
-  res <- matrix(data = markersWide[["res"]], nrow = nGeno, byrow = TRUE,
-                dimnames = dimnames(markers)[2:1])
+  parVals <- substring(parVals, first = 1, last = nchar(parVals) - 1)
+  ## Create output.
+  res <- sapply(X = rownames(markers), FUN = function(marker) {
+    mrkProbs <- getProbs(IBDprob, marker)[-1]
+    apply(mrkProbs, MARGIN = 1, FUN = function(x) {
+      if (length(which(x > (0.5 + 0.15 / nPar))) == 1) {
+        parVals[which.max(x)]
+      } else {
+        "-"
+      }
+    })
+  })
+  ## Convert to matrix.
+  res <- matrix(data = res, nrow = nGeno, dimnames = dimnames(markers)[2:1])
+  resPar <- matrix(data = seq_along(parents), nrow = nPar, ncol = nMarkers,
+                   dimnames = list(parents, dimnames(markers)[[1]]))
+  res <- rbind(resPar, res)
   ## Write map file.
   cat(file = outFileMap, "# fjFile = MAP\n")
   write.table(map, file = outFileMap,
@@ -57,7 +72,8 @@ writeFlapjack <- function(IBDprob,
               col.names = FALSE, append = TRUE)
   ## Write marker file.
   cat(file = outFileGeno, "# fjFile = GENOTYPE\n\t")
-  cat(colnames(res), file = outFileGeno, append = TRUE)
+  cat(colnames(res), file = outFileGeno, sep = "\t", append = TRUE)
+  cat("\n", file = outFileGeno, append = TRUE)
   write.table(res, file = outFileGeno,
               quote = FALSE, sep = "\t", na = "-", row.names = TRUE,
               col.names = FALSE, append = TRUE)

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cfloat>
 #include <float.h> // for DBL_MIN
+#include <limits> // for numeric_limits
 
 #include "misc.h"
 #include "ibdexcept.h"

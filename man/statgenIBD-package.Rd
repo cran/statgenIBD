@@ -14,6 +14,15 @@ For biparental, three and four-way crosses Identity by Descent
     packages for streamlining the analysis of typical plant breeding experiments
     developed by Biometris.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://biometris.github.io/statgenIBD/index.html}
+  \item \url{https://github.com/Biometris/statgenIBD/}
+  \item Report bugs at \url{https://github.com/Biometris/statgenIBD/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Bart-Jan van Rossum \email{bart-jan.vanrossum@wur.nl} (\href{https://orcid.org/0000-0002-8673-2514}{ORCID})
 
