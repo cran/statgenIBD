@@ -145,11 +145,21 @@ SxMIBD$markers["abg313b", "dh005", ]
 
 ### Visualizing results
 
-The calculated IBD probabilities can be visualized using the `plot` function. This will generate a plot of the probabilities per parent for a selected genotype. The plot for **dh005** is made below. Note that it contains a lot of white space since the markers in the file are spread widely along the genome. In the next section we will show how to compute probabilities on a denser grid.
+The calculated IBD probabilities can be visualized using the `plot` function. Two types of plot can be made using this function. `plotType = "singleGeno"` will generate a plot of the probabilities per parent for a selected genotype. The plot for **dh005** is made below. Note that it contains a lot of white space since the markers in the file are spread widely along the genome. In the next section we will show how to compute probabilities on a denser grid.
 
 ```{r plotsxmIBD}
-## Visualize IBD probabilities for dh005
+## Visualize IBD probabilities for dh005.
 plot(SxMIBD, 
+     plotType = "singleGeno",
+     genotype = "dh005")
+```
+
+A second type of plot can be made specifying `plotType = "allGeno"`. This will generate a plot of all genotypes colored per evaluation position according to the parent with the highest probability for that combination of genotype and position. Darker colors indicate a higher probability. Dashed lines indicate the start of a new chromosome.
+
+```{r plotsxmIBDAll}
+## Visualize IBD probabilities for all genotypes.
+plot(SxMIBD, 
+     plotType = "allGeno",
      genotype = "dh005")
 ```
 
@@ -253,7 +263,7 @@ The results of IBD calculations can be written to Flapjack [@milne2010] format u
 
 ```{r SxMwriteFlapjack, eval=FALSE}
 ## Write results to Flapjack format.
-writeFlapjack(SxMIB_Ext,
+writeFlapjack(SxMIBD_Ext,
               outFileMap = "map.txt",
               outFileGeno = "geno.txt")
 ```
@@ -329,7 +339,8 @@ AB <- calcIBD(popType = "F4DH",
               markerFile = system.file("extdata/multipop", "AxB.txt",
                                        package = "statgenIBD"),
               mapFile = system.file("extdata/multipop", "mapfile.txt",
-                                    package = "statgenIBD"))
+                                    package = "statgenIBD"),
+              evalDist = 1)
 
 ## Print summary.
 summary(AB)
@@ -339,7 +350,8 @@ AC <- calcIBD(popType = "F4DH",
               markerFile = system.file("extdata/multipop", "AxC.txt",
                                        package = "statgenIBD"),
               mapFile = system.file("extdata/multipop", "mapfile.txt",
-                                    package = "statgenIBD"))
+                                    package = "statgenIBD"),
+              evalDist = 1)
 
 ## Print summary.
 summary(AC)
@@ -355,8 +367,8 @@ summary(ABC)
 Looking at the summary, we can see the our combined population now has 180 individuals, 100 from population AB and 80 from population AC. There are also three parents, A, B and C. For all individuals from population AB the probability for parent C will be 0, as will be the probability for parent B for individuals from population AC.
 
 ```{r checkMultiIBD}
-## Extract probabilities for markers M1_1 and M3_3.
-ABCProbs <- getProbs(ABC, markers = c("M1_1", "M3_3"))
+## Extract probabilities for markers EXT_1_1 and EXT_1_3.
+ABCProbs <- getProbs(ABC, markers = c("EXT_1_1", "EXT_1_3"))
 
 ## Print probabilities for genotypes AxB0001 and AxC0001.
 ABCProbs[ABCProbs$geno %in% c("AxB0001", "AxC0001"), ]
@@ -369,6 +381,12 @@ The value of 0 for either parent B or parent C also shows clearly in the plots b
 ```{r plotMultiIBD, fig.show="hold", out.width="47%"}
 plot(ABC, genotype = "AxB0001")
 plot(ABC, genotype = "AxC0001")
+```
+
+Plotting all genotypes together also shows the clear separation between the to crosses in `ABC`.
+
+```{r plotMultiIBDAll}
+plot(ABC, plotType = "allGeno")
 ```
 
 ```{r winddown, include = FALSE}

@@ -54,12 +54,12 @@ vector<IndProp> make_ped_file(const string& poptype,
 
 void marker_selection(LinkageMap& markermap,
                       LinkageMap& eval_pos,
-                      int sel_chr,
+                      std::string sel_chr,
                       bool analysis_fam,
                       bool pos_option)
 {
   markermap = adjust_markermap(markermap);
-  if (sel_chr != -1)
+  if (sel_chr != "-1")
   {
     eval_pos = select_chr(eval_pos,sel_chr);
     markermap = select_chr(markermap,sel_chr);
@@ -94,8 +94,9 @@ void marker_selection(LinkageMap& markermap,
   }
   if (markermap.size() == 1)
   {
+    Rcout << "YES" << endl;
     Locus loc = markermap[0];
-    markermap.push_back(Locus(loc.GetChr()+1,loc.GetPosition(),EXTR_POS));
+    markermap.push_back(Locus(loc.GetChr(),loc.GetPosition() + 1.0,EXTR_POS));   
   }
 }
 
@@ -171,7 +172,7 @@ int main_pedigreeR(arma::cube& Z,
   matrix<score> geno;
   LinkageMap markermap = read_map_file(mapfile);
   bool analysis_family = true;
-  int sel_chr = -1;
+  std::string sel_chr = "-1";
 
   matrix<score> geno_locfile;
   vector<string> ID, marker_names;
@@ -191,7 +192,7 @@ int main_pedigreeR(arma::cube& Z,
   {
     eval_pos = read_eval_pos_df(eval_pos_df);
   }
-  else if (max_step_size > 0) 
+  else if (max_step_size > 0)
   {
     if (grid)
     {

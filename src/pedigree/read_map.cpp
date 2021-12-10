@@ -8,7 +8,7 @@ using namespace ibd;
 using namespace std;
 
 LinkageMap select_chr(const LinkageMap& markermap,
-                      int sel_chr)
+                      std::string sel_chr)
 {
   const int M = markermap.size();
   LinkageMap sel_markermap;
@@ -39,7 +39,7 @@ LinkageMap adjust_markermap(const LinkageMap& markermap)
         {
           string n = loc.GetName();
           double p = new_markermap.back().GetPosition();
-          int c = loc.GetChr();
+          std::string c = loc.GetChr();
           loc = Locus(c,p+delta,n);
         }
       }
@@ -107,7 +107,7 @@ LinkageMap read_map_file(const string& filename)
   {
     double pos;
     string name;
-    int chr;
+    std::string chr;
     inp >> name >> chr >> pos;
     Locus loc(chr,pos,name);
     markermap.push_back(loc);
@@ -116,40 +116,22 @@ LinkageMap read_map_file(const string& filename)
   return markermap;
 }
 
-LinkageMap read_eval_pos_file(const string& filename)
-{
-  LinkageMap positions;
-  string line;
-  ifstream inp;
-  OpenFile(inp,filename);
-  int line_nr = 0;
-  while (getline(inp,line))
-  {
-    line_nr++;
-    if (line.empty()) continue;
-    istringstream line_stream(line);
-    int chr;
-    double pos;
-    line_stream >> chr >> pos;
-    string name = "EVAL_" + stringify(chr) + "_" + stringify(pos);
-    //positions.push_back(Locus(chr,pos,EVAL_POS));
-    positions.push_back(Locus(chr, pos, name));
-  }
-  sort(positions.begin(),positions.end());
-  return positions;
-}
-
 LinkageMap read_eval_pos_df(const Rcpp::DataFrame& evalposdf)
 {
   Rcpp::NumericVector pos = evalposdf["pos"];
-  Rcpp::NumericVector chr = evalposdf["chr"];
+  Rcpp::CharacterVector chr = evalposdf["chr"];
   LinkageMap positions;
   for (int m=0;m<evalposdf.nrows();m++)
   {
-    string name = "EVAL_" + stringify(chr[m]) + "_" + stringify(pos[m]);
-    positions.push_back(Locus(chr[m], pos[m], name));
+    std::string chrM = Rcpp::as<std::string>(chr[m]);    
+    std::string name = "EVAL_" + chrM + "_" + stringify(pos[m]);
+    double posM = pos[m];
+	Locus loc(chrM,posM,name);
+	positions.push_back(loc);    
   }
+
   sort(positions.begin(),positions.end());
+  
   return(positions);
 }
 

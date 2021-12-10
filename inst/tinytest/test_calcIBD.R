@@ -44,6 +44,22 @@ expect_equal(outMsg, character())
 expect_true(any(grepl(pattern = "reading data", x = outMsg2)))
 expect_true(any(grepl(pattern = "analysis of family", x = outMsg2)))
 
+## Check that option evalPos works correctly.
+evalPos <- read.table(system.file("extdata/SxM", "SxM_eval.txt",
+                                  package = "statgenIBD"), header = TRUE)
 
+expect_silent(SxMIBD_evalPos <- calcIBD(popType = "DH", markerFile = SxMmarkers,
+                                        mapFile = SxMmap, evalPos = evalPos))
+
+expect_equal_to_reference(SxMIBD_evalPos, "SxMIBD_evalPos")
+
+## Check that calcIBD works correctly with character values chromosomes.
+evalPos[["chr"]][4:9] <- rep(c("1b", "1a"), each = 3)
+
+expect_silent(SxMIBD_evalPosChr <-
+                calcIBD(popType = "DH", markerFile = SxMmarkers,
+                        mapFile = SxMmap, evalPos = evalPos))
+
+expect_equal_to_reference(SxMIBD_evalPosChr, "SxMIBD_evalPosChr")
 
 

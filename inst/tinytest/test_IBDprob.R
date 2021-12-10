@@ -14,7 +14,7 @@ expect_true(any(grepl("Number of evaluation points:  116", SxMSumm)))
 expect_true(any(grepl("Number of individuals:  150", SxMSumm)))
 expect_true(any(grepl("Parents:  Morex Steptoe", SxMSumm)))
 
-## Test plot.
+## Test plot for single genotype.
 expect_error(plot(SxMIBD, genotype = 1),
              "should be a character string")
 expect_error(plot(SxMIBD, genotype = "a"),
@@ -31,3 +31,8 @@ expect_inherits(p, "ggplot")
 p1 <- plot(SxMIBD, genotype = "dh001", title = "tst")
 expect_equal(p1$labels$title, "tst")
 
+## Test plot for all genotypes.
+
+expect_silent(p2 <- plot(SxMIBD, plotType = "allGeno"))
+
+expect_inherits(p2, "ggplot")

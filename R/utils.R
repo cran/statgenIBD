@@ -90,11 +90,10 @@ markers3DtoMat <- function(x,
                            markerSel = NULL) {
   ## Use markers3DtoLong for summing homozygeous and heterozygeous probs.
   markersLong <- markers3DtoLong(x, markerSel = markerSel)
-  ## lex.order = TRUE is needed to get a proper sorting in the header of
-  ## the output matrix.
-  markersLong[["snpPar"]] <- interaction(markersLong$snp,
-                                         markersLong$parent, sep = "_",
-                                         lex.order = TRUE)
+  markersLong[["snpPar"]] <-
+    paste0(markersLong[["snp"]], "_", markersLong[["parent"]])
+  markersLong[["snpPar"]] <- factor(markersLong[["snpPar"]],
+                                    levels = unique(markersLong[["snpPar"]]))
   ## Convert to matrix.
   markerMat <- tapply(X = markersLong[["prob"]],
                       INDEX = list(markersLong[["genotype"]],

@@ -10,13 +10,13 @@ class Locus
 {
 public:
 	Locus() {}
-	Locus(int c, double p, const std::string& name = "")
+	Locus(std::string c, double p, const std::string& name = "")
 		: chr(c), pos(p), loc_name(name) {}
-	int GetChr() const { return chr; }
+	std::string GetChr() const { return chr; }
 	double GetPosition() const { return pos; }
 	std::string GetName() const { return loc_name; }
 private:
-	int chr;
+  std::string chr;
 	double pos;
 	std::string loc_name;
 	friend int compare(const Locus& , const Locus&);

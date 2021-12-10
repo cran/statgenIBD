@@ -36,8 +36,15 @@ SxMIBD$markers["plc", "dh001", ]
 SxMIBD$markers["abg313b", "dh005", ]
 
 ## ----plotsxmIBD-------------------------------------------------------------------------
-## Visualize IBD probabilities for dh005
+## Visualize IBD probabilities for dh005.
 plot(SxMIBD, 
+     plotType = "singleGeno",
+     genotype = "dh005")
+
+## ----plotsxmIBDAll----------------------------------------------------------------------
+## Visualize IBD probabilities for all genotypes.
+plot(SxMIBD, 
+     plotType = "allGeno",
      genotype = "dh005")
 
 ## ----sxmIBD_extGrid---------------------------------------------------------------------
@@ -101,7 +108,7 @@ head(SxM_probs)
 
 ## ----SxMwriteFlapjack, eval=FALSE-------------------------------------------------------
 #  ## Write results to Flapjack format.
-#  writeFlapjack(SxMIB_Ext,
+#  writeFlapjack(SxMIBD_Ext,
 #                outFileMap = "map.txt",
 #                outFileGeno = "geno.txt")
 
@@ -144,7 +151,8 @@ AB <- calcIBD(popType = "F4DH",
               markerFile = system.file("extdata/multipop", "AxB.txt",
                                        package = "statgenIBD"),
               mapFile = system.file("extdata/multipop", "mapfile.txt",
-                                    package = "statgenIBD"))
+                                    package = "statgenIBD"),
+              evalDist = 1)
 
 ## Print summary.
 summary(AB)
@@ -154,7 +162,8 @@ AC <- calcIBD(popType = "F4DH",
               markerFile = system.file("extdata/multipop", "AxC.txt",
                                        package = "statgenIBD"),
               mapFile = system.file("extdata/multipop", "mapfile.txt",
-                                    package = "statgenIBD"))
+                                    package = "statgenIBD"),
+              evalDist = 1)
 
 ## Print summary.
 summary(AC)
@@ -164,8 +173,8 @@ ABC <- c(AB, AC)
 summary(ABC)
 
 ## ----checkMultiIBD----------------------------------------------------------------------
-## Extract probabilities for markers M1_1 and M3_3.
-ABCProbs <- getProbs(ABC, markers = c("M1_1", "M3_3"))
+## Extract probabilities for markers EXT_1_1 and EXT_1_3.
+ABCProbs <- getProbs(ABC, markers = c("EXT_1_1", "EXT_1_3"))
 
 ## Print probabilities for genotypes AxB0001 and AxC0001.
 ABCProbs[ABCProbs$geno %in% c("AxB0001", "AxC0001"), ]
@@ -173,6 +182,9 @@ ABCProbs[ABCProbs$geno %in% c("AxB0001", "AxC0001"), ]
 ## ----plotMultiIBD, fig.show="hold", out.width="47%"-------------------------------------
 plot(ABC, genotype = "AxB0001")
 plot(ABC, genotype = "AxC0001")
+
+## ----plotMultiIBDAll--------------------------------------------------------------------
+plot(ABC, plotType = "allGeno")
 
 ## ----winddown, include = FALSE------------------------------------------------
 options(op)

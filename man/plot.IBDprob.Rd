@@ -4,15 +4,25 @@
 \alias{plot.IBDprob}
 \title{Plot function for objects of class IBDprob}
 \usage{
-\method{plot}{IBDprob}(x, ..., genotype, title = genotype, output = TRUE)
+\method{plot}{IBDprob}(
+  x,
+  ...,
+  plotType = c("singleGeno", "allGeno"),
+  genotype,
+  title = NULL,
+  output = TRUE
+)
 }
 \arguments{
 \item{x}{An object of class \code{IBDprob}.}
 
 \item{...}{Further arguments. Unused.}
 
+\item{plotType}{A character string indicating the type of plot that should
+be made.}
+
 \item{genotype}{A character string indicating the genotype for which the
-plot should be made.}
+plot should be made. Ignored if \code{plotType = "allGeno"}.}
 
 \item{title}{A character string, the title of the plot.}
 
@@ -23,7 +33,11 @@ plot should be made.}
 A ggplot object is invisibly returned.
 }
 \description{
-Creates a plot for an object of class \code{IBDprob}.
+Creates a plot for an object of class \code{IBDprob}. Two types of plot can
+be made, a plot for a single genotype showing the IBD probabilities for all
+parents across the genome (\code{plotType = "singleGeno"}), or a plot showing
+for all genotypes the probabilities of the parent with the highest
+probability per marker (\code{plotType = "allGeno"}).
 }
 \examples{
 ## Compute IBD probabilities for Steptoe Morex.
@@ -38,6 +52,11 @@ SxMIBD_Ext <- calcIBD(popType = "DH",
 
 ## Plot results for genotype dh005.
 plot(SxMIBD_Ext,
+     plotType = "singleGeno",
      genotype = "dh005")
+
+## Plot results for all genotypes.
+plot(SxMIBD_Ext,
+     plotType = "allGeno")
 
 }

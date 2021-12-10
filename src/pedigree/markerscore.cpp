@@ -148,6 +148,11 @@ int read_flapjackfile(vector<string>& geno,
     istringstream line_stream(line);
     string g;
     getline(line_stream,g,'\t');
+	
+	// Check if g not already in geno.
+	if (std::find(geno.begin(), geno.end(), g) != geno.end())
+		throw ibd_error("Genotypes in genofile should be unique");
+	
     geno.push_back(g);
 
     vector<score> ind_scores;

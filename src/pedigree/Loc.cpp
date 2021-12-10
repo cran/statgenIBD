@@ -9,6 +9,13 @@ MapFunction mapfunction = invhaldane;
 int compare(const Locus& locA,
             const Locus& locB)
 {
+	int intA = -1, intB = -1;
+	try {intA = std::stoi(locA.chr); } catch (...) {}
+	try {intB = std::stoi(locB.chr); } catch (...) {}
+	
+	if (intA < intB) return -1;
+	if (intA > intB) return 1;
+
 	if (locA.chr < locB.chr) return -1;
 	if (locA.chr > locB.chr) return  1;
 
@@ -51,7 +58,7 @@ vector<ibd::Interval> make_intervals(const LinkageMap& markermap)
 {
 	vector<Interval> result;
 	int nloc = markermap.size();
-	int chr_nr = -1;
+	std::string chr_nr = "-1";
 	double left = 0.0;
 	double right;
 	for (int i=0;i<nloc;i++)
@@ -102,9 +109,9 @@ LinkageMap generate_extended_map(const LinkageMap& Markermap,
 			int N = (int) ceil(dist/max_step_size - 1.0e-5);
 			for (int i=1;i<N;i++)
 			{
-				int chr = Left.GetChr();
+			  std::string chr = Left.GetChr();
 				double pos = round(left_pos + (i/(1.0*N))*dist,2);
-				string name = "EXT_" + stringify(chr) + "_" + stringify(pos);
+				string name = "EXT_" + chr + "_" + stringify(pos);
 				extended_map.push_back(Locus(chr,pos,name));
 			}
 		}
@@ -119,7 +126,7 @@ LinkageMap generate_grid_map(const LinkageMap& Markermap,
 {
   LinkageMap grid_map;
   int nloc = Markermap.size();
-  int chr_nr = -1;
+  std::string chr_nr = "-1";
   double left = 0.0;
   double right;
   for (int i=0;i<nloc;i++)
@@ -136,9 +143,9 @@ LinkageMap generate_grid_map(const LinkageMap& Markermap,
       int N = (int) ceil(dist/max_step_size - 1.0e-5);
       for (int i=1;i<N;i++)
       {
-        int chr = chr_nr;
+        std::string chr = chr_nr;
         double pos = round(left + (i/(1.0*N))*dist,2);
-        string name = "EXT_" + stringify(chr) + "_" + stringify(pos);
+        string name = "EXT_" + chr + "_" + stringify(pos);
         grid_map.push_back(Locus(chr,pos,name));
       }
     }

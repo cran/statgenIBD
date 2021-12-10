@@ -119,6 +119,7 @@ List calcIBD(CharacterVector& popType,
   double max_step_size = -1;
   if (evalDist.isNotNull())
     max_step_size = Rcpp::as<double>(evalDist);
+
   try
   {
     main_pedigreeR(prob, parents, offspring, positions,
@@ -178,7 +179,7 @@ List calcIBD(CharacterVector& popType,
   }
   // Construct map file from positions.
   CharacterVector posNames = CharacterVector(M);
-  IntegerVector chr = IntegerVector(M);
+  CharacterVector chr = CharacterVector(M);
   NumericVector pos = NumericVector(M);
   for (int m = 0; m < M; m++) {
     posNames(m) = positions[m].GetName();
@@ -197,5 +198,6 @@ List calcIBD(CharacterVector& popType,
                           Named("parents") = parents,
                           Named("multiCross") = false);
   res.attr("class") = "IBDprob";
+  
   return res;
 }
