@@ -6,6 +6,7 @@
 
 #include "matvec.h"
 #include "Loc.h"
+#include "util_genetics.h"
 
 const std::string version = "2.75";
 const std::string date    = "april 13, 2020";
@@ -14,6 +15,7 @@ int main_pedigreeR(arma::cube& Z,
                    std::vector<std::string>& parents,
                    std::vector<std::string>& offspring,
                    LinkageMap& positions,
+				   std::vector<IndProp>& pop,
                    const std::string& poptype,
                    const std::string& locfile,
                    const std::string& mapfile,

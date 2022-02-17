@@ -33,7 +33,7 @@ expect_equal(ABC$map, AB$map)
 expect_equal_to_reference(ABC$markers, "ABC_markers")
 expect_equal(ABC$parents, c("A", "B", "C"))
 expect_equal(ABC$popType, AB$popType)
-expect_true(ABC$multicross)
+expect_true(ABC$multiCross)
 
 ## Check that genoCross attribute is added correctly.
 genoCross <- attr(x = ABC, which = "genoCross")

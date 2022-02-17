@@ -24,13 +24,13 @@ library(statgenIBD)
 op <- options(width = 90)
 ```
 
-# The statgenIBD package {.unnumbered}
+## The statgenIBD package {-}
 
 The `statgenIBD` package is developed as an easy-to-use package for Identity By Descent (IBD) calculations for most common populations used in plant breeding. The calculations of the IBDs are based on Hidden Markov Models (HMM) and inheritance vectors. For details of the theory see @Lander1987 and @Huang2011.
 
 This vignette describes how to perform these calculations and how to interpret and use its outputs. This will be done using a number of example data sets, both real life and simulated.
 
-# Population types
+## Population types
 
 In the package, IBD probabilities can be calculated for many different types of populations. In the following table all supported populations are listed. Note that the value of x in the population types is variable, with its maximum value depicted in the last column.
 
@@ -70,11 +70,11 @@ In the package, IBD probabilities can be calculated for many different types of 
 
 For IBD calculations of more complex population types, including MAGIC and population with complicated pedigree structure, see [RABBIT](https://github.com/chaozhi/RABBIT) software [@Zheng2014; @Zheng2015; @Zheng2018].
 
-# Examples
+## Examples
 
 We will demonstrate the basic functionality of the package using some example data sets. The first example will be for a real life data set for a relatively simple doubled haploid population. To highlight some specifics of more complex populations and crosses, we will use simulated data.
 
-## Steptoe Morex
+### Steptoe Morex
 
 The first example is the Steptoe Morex data, described by [@Hayes1993]. This is a population of 150 barley doubled haploid lines with parentage Steptoe / Morex. The population was developed for the North American Barley Genome Mapping Project by the Oregon State University Barley Breeding Program. For a full description see the [website](https://wheat.pw.usda.gov/ggpages/SxM/) of the program.
 
@@ -83,7 +83,7 @@ The map and genotypic file for this population are included in the package.
 Both the map and the genotypic file should be in a **tab**-delimited format. The map file should be a file without a header. It should contain three columns, corresponding to marker name, chromosome number and position on the chromosome in centiMorgan.
 
 ```{r inspectMap}
-## Read the map and display the first tows.
+## Read the map and display the first rows.
 map <- read.table(system.file("extdata/SxM", "SxM_map.txt", package = "statgenIBD"))
 head(map)
 ```
@@ -145,7 +145,15 @@ SxMIBD$markers["abg313b", "dh005", ]
 
 ### Visualizing results
 
-The calculated IBD probabilities can be visualized using the `plot` function. Two types of plot can be made using this function. `plotType = "singleGeno"` will generate a plot of the probabilities per parent for a selected genotype. The plot for **dh005** is made below. Note that it contains a lot of white space since the markers in the file are spread widely along the genome. In the next section we will show how to compute probabilities on a denser grid.
+The calculated IBD probabilities can be visualized using the `plot` function. Three types of plot can be made using this function. `plotType = "pedigree"` will create a plot showing the pedigree of the population for which the IBD probabilities where computed. 
+
+```{r plotsxmIBDped}
+### Visualize the pedigree of the population.
+plot(SxMIBD,
+     plotType = "pedigree")
+```
+
+`plotType = "singleGeno"` will generate a plot of the probabilities per parent for a selected genotype. The plot for **dh005** is made below. Note that it contains a lot of white space since the markers in the file are spread widely along the genome. In the next section we will show how to compute probabilities on a denser grid.
 
 ```{r plotsxmIBD}
 ## Visualize IBD probabilities for dh005.

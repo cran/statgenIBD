@@ -50,7 +50,9 @@ getProbs <- function(IBDprob,
   }
   if (sumProbs) {
     ## probabilities are summed, e.g. pA = pA + 0.5 * pAB
-    probs <- as.data.frame(markers3DtoMat(IBDprob, markers))
+    probs <- as.data.frame(markers3DtoMat(markers = IBDprob$markers,
+                                          parents = IBDprob$parents,
+                                          markerSel = markers))
   } else {
     ## probabilites are taken directly from array, so leaving pA and PAB in.
     probs <- lapply(X = markers, FUN = function(marker) {

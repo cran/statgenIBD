@@ -19,18 +19,20 @@ expect_silent(SxMIBD <- calcIBD(popType = "DH", markerFile = SxMmarkers,
 
 expect_inherits(SxMIBD, "IBDprob")
 expect_equal(names(SxMIBD),
-             c("map", "markers", "popType", "parents", "multiCross"))
+             c("map", "markers", "popType", "parents", "pedigree", "multiCross"))
 expect_inherits(SxMIBD$map, "data.frame")
 expect_inherits(SxMIBD$markers, "array")
 expect_equal(dim(SxMIBD$markers), c(116, 150, 2))
 expect_inherits(SxMIBD$popType, "character")
 expect_inherits(SxMIBD$parents, "character")
+expect_inherits(SxMIBD$pedigree, "data.frame")
 expect_inherits(SxMIBD$multiCross, "logical")
 
 ## Check that output content is correct.
 
 expect_equal_to_reference(SxMIBD$map, "SxMIBD_map")
 expect_equal_to_reference(SxMIBD$markers, "SxMIBD_markers", tolerance = 10e-6)
+expect_equal_to_reference(SxMIBD$map, "SxMIBD_pedigree")
 expect_equal(SxMIBD$popType, "DH")
 expect_false(SxMIBD$multiCross)
 
@@ -61,5 +63,4 @@ expect_silent(SxMIBD_evalPosChr <-
                         mapFile = SxMmap, evalPos = evalPos))
 
 expect_equal_to_reference(SxMIBD_evalPosChr, "SxMIBD_evalPosChr")
-
 

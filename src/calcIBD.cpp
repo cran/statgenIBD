@@ -113,16 +113,18 @@ List calcIBD(CharacterVector& popType,
   int x;
   bool isDH = _poptype.find("DH") != std::string::npos;
   bool isBC = match(x, _poptype, "BCx");
+  bool isC3C4 = ((_poptype == "C3") | (_poptype == "C4"));
   LinkageMap positions;
   arma::cube prob;
   vector<string> parents, offspring;
+  vector<IndProp> pop;
   double max_step_size = -1;
   if (evalDist.isNotNull())
     max_step_size = Rcpp::as<double>(evalDist);
 
   try
   {
-    main_pedigreeR(prob, parents, offspring, positions,
+    main_pedigreeR(prob, parents, offspring, positions, pop,
                    _poptype,
                    Rcpp::as<std::string>(markerFile),
                    Rcpp::as<std::string>(mapFile),
@@ -145,6 +147,7 @@ List calcIBD(CharacterVector& popType,
   }
   const int npar = parents.size();
   const int M = positions.size();
+  const int K = pop.size();
   unsigned int nSlices = prob.n_slices;
   // Remove slices with only zero
   for (arma::uword i = 0; i < nSlices; i++) {
@@ -154,12 +157,15 @@ List calcIBD(CharacterVector& popType,
   }
   // Construct vector of names for parents.
   CharacterVector parentNames (0);
-  for (int i = 0; i < npar; i++)
+  if (!isC3C4)
   {
-    if (!(isBC && i == 0))
-    {
-      parentNames.push_back("p" + parents[i]);
-    }
+	for (int i = 0; i < npar; i++)
+	 {
+       if (!(isBC && i == 0))
+         {
+           parentNames.push_back("p" + parents[i]);
+         }
+     }
   }
   if (!isDH)
   {
@@ -168,8 +174,8 @@ List calcIBD(CharacterVector& popType,
       parentNames.push_back("p" + parents[0] + parents[1]);
     } else if (npar == 3)
     {
-      parentNames.push_back("p" + parents[0] + parents[1]);
       parentNames.push_back("p" + parents[0] + parents[2]);
+      parentNames.push_back("p" + parents[1] + parents[2]);
     } else if (npar == 4) {
       parentNames.push_back("p" + parents[0] + parents[2]);
       parentNames.push_back("p" + parents[0] + parents[3]);
@@ -177,7 +183,7 @@ List calcIBD(CharacterVector& popType,
       parentNames.push_back("p" + parents[1] + parents[3]);
     }
   }
-  // Construct map file from positions.
+  // Construct map data.frame from positions.
   CharacterVector posNames = CharacterVector(M);
   CharacterVector chr = CharacterVector(M);
   NumericVector pos = NumericVector(M);
@@ -188,16 +194,30 @@ List calcIBD(CharacterVector& popType,
   }
   DataFrame map = DataFrame::create(Named("chr") = chr, Named("pos") = pos);
   map.attr("row.names") = posNames;
+  // Construct pedigree data.frame from pop.
+  CharacterVector ID = CharacterVector(K);
+  CharacterVector par1 = CharacterVector(K);
+  CharacterVector par2 = CharacterVector(K);
+  CharacterVector type = CharacterVector(K);
+  for (int k = 0; k < K; k++) {
+    ID(k) = pop[k].GetID();
+    par1(k) = pop[k].GetP1();
+	par2(k) = pop[k].GetP2();
+    type(k) = pop[k].GetType();
+  }
+  DataFrame pedigree = DataFrame::create(Named("ID") = ID, Named("par1") = par1,
+                                         Named("par2") = par2, Named("type") = type);
   // Reshape prob to 3D array and add names to dimensions.
   NumericVector P = wrap(prob);
   P.attr("dimnames") = List::create(posNames, offspring, parentNames);
-  // Create result list: map + markers.
+  // Create result list.
   List res = List::create(Named("map") = map,
                           Named("markers") = P,
                           Named("popType") = popType,
                           Named("parents") = parents,
+						  Named("pedigree") = pedigree,
                           Named("multiCross") = false);
   res.attr("class") = "IBDprob";
-  
+
   return res;
 }

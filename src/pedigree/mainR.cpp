@@ -96,7 +96,7 @@ void marker_selection(LinkageMap& markermap,
   {
     Rcout << "YES" << endl;
     Locus loc = markermap[0];
-    markermap.push_back(Locus(loc.GetChr(),loc.GetPosition() + 1.0,EXTR_POS));   
+    markermap.push_back(Locus(loc.GetChr(),loc.GetPosition() + 1.0,EXTR_POS));
   }
 }
 
@@ -160,6 +160,7 @@ int main_pedigreeR(arma::cube& Z,
                    vector<string>& parents,
                    vector<string>& offspring,
                    LinkageMap& positions,
+				   vector<IndProp>& pop,
                    const string& poptype,
                    const string& locfile,
                    const string& mapfile,
@@ -182,7 +183,7 @@ int main_pedigreeR(arma::cube& Z,
   }
   read_flapjackfile(ID, marker_names, geno_locfile, locfile);
 
-  vector<IndProp> pop = make_ped_file(poptype, ID);
+  pop = make_ped_file(poptype, ID);
 
   markermap = reduce_markermap(markermap, marker_names);
   print_marker_warnings(markermap, marker_names);

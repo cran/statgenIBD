@@ -15,19 +15,14 @@ Markov Models (HMM) and inheritance vectors.
 
 ## Installation
 
-  - Install from CRAN:
-
-<!-- end list -->
+-   Install from CRAN:
 
 ``` r
 install.packages("statgenIBD")
 ```
 
-  - Install latest development version from GitHub (requires
-    [remotes](https://github.com/r-lib/remotes)
-package):
-
-<!-- end list -->
+-   Install latest development version from GitHub (requires
+    [remotes](https://github.com/r-lib/remotes) package):
 
 ``` r
 remotes::install_github("Biometris/statgenIBD", ref = "develop", dependencies = TRUE)

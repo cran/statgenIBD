@@ -46,10 +46,9 @@ chkFile <- function(outFile,
 #'
 #' @noRd
 #' @keywords internal
-markers3DtoLong <- function(x,
+markers3DtoLong <- function(markers,
+                            parents,
                             markerSel = NULL) {
-  markers <- x$markers
-  parents <- x$parents
   ## Restrict markers to selected markers
   if (!is.null(markerSel)) {
     markers <- markers[markerSel, , , drop = FALSE]
@@ -86,10 +85,12 @@ markers3DtoLong <- function(x,
 #'
 #' @noRd
 #' @keywords internal
-markers3DtoMat <- function(x,
+markers3DtoMat <- function(markers,
+                           parents,
                            markerSel = NULL) {
   ## Use markers3DtoLong for summing homozygeous and heterozygeous probs.
-  markersLong <- markers3DtoLong(x, markerSel = markerSel)
+  markersLong <- markers3DtoLong(markers = markers, parents = parents,
+                                 markerSel = markerSel)
   markersLong[["snpPar"]] <-
     paste0(markersLong[["snp"]], "_", markersLong[["parent"]])
   markersLong[["snpPar"]] <- factor(markersLong[["snpPar"]],

@@ -1,3 +1,8 @@
+# statgenIBD 1.0.3
+
+* It is now possible to plot the pedigree of an object of class `IBDprob` by specifying `plotType = "pedigree"`.
+* A small bug in the calculation of probabilities for populations C3 and C4 is fixed.
+
 # statgenIBD 1.0.2
 
 * It is now possible to specify chromosomes in character format, i.e. 1a, 1b, 1c as is common in certain crops.

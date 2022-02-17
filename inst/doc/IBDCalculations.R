@@ -8,7 +8,7 @@ library(statgenIBD)
 op <- options(width = 90)
 
 ## ----inspectMap-------------------------------------------------------------------------
-## Read the map and display the first tows.
+## Read the map and display the first rows.
 map <- read.table(system.file("extdata/SxM", "SxM_map.txt", package = "statgenIBD"))
 head(map)
 
@@ -34,6 +34,11 @@ SxMIBD$markers["plc", "dh001", ]
 
 ## ----check_dh005_abg313b----------------------------------------------------------------
 SxMIBD$markers["abg313b", "dh005", ]
+
+## ----plotsxmIBDped----------------------------------------------------------------------
+### Visualize the pedigree of the population.
+plot(SxMIBD,
+     plotType = "pedigree")
 
 ## ----plotsxmIBD-------------------------------------------------------------------------
 ## Visualize IBD probabilities for dh005.

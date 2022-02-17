@@ -22,7 +22,12 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Martin Boer \email{martin.boer@wur.nl}
+  \item Martin Boer \email{martin.boer@wur.nl} (\href{https://orcid.org/0000-0002-1879-4588}{ORCID})
+}
+
+Other contributors:
+\itemize{
+  \item Wenhao Li [contributor]
 }
 
 }

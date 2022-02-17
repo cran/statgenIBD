@@ -36,3 +36,10 @@ expect_equal(p1$labels$title, "tst")
 expect_silent(p2 <- plot(SxMIBD, plotType = "allGeno"))
 
 expect_inherits(p2, "ggplot")
+
+## Test pedigree plot.
+
+expect_silent(p3 <- plot(SxMIBD, plotType = "pedigree"))
+
+expect_inherits(p3, "ggplot")
+

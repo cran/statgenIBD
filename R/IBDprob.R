@@ -87,6 +87,11 @@ c.IBDprob <- function(...) {
   parentsNw <- unique(unlist(sapply(X = markerLst, FUN = function(mrk) {
     dimnames(mrk)[3]
   })))
+  pedLst <- lapply(X = args, FUN = `[[`, "pedigree")
+  pedTot <- do.call(rbind, pedLst)
+  pedParNw <- unique(pedTot[pedTot[["par1"]] == 0 & pedTot[["par2"]] == 0, ])
+  pedOffNw <- pedTot[pedTot[["par1"]] != 0 | pedTot[["par2"]] != 0, ]
+  pedNw <- rbind(pedParNw, pedOffNw)
   genoNw <- unlist(sapply(X = markerLst, FUN = colnames))
   nGeno <- sapply(X = markerLst, FUN = ncol)
   genoCross <- data.frame(cross = paste0("cross",
@@ -104,7 +109,8 @@ c.IBDprob <- function(...) {
                         markers = markersNw,
                         popType = pops,
                         parents = parents,
-                        multicross = TRUE),
+                        pedigree = pedNw,
+                        multiCross = TRUE),
                    class = "IBDprob",
                    genoCross = genoCross)
   return(res)
@@ -112,18 +118,23 @@ c.IBDprob <- function(...) {
 
 #' Plot function for objects of class IBDprob
 #'
-#' Creates a plot for an object of class \code{IBDprob}. Two types of plot can
-#' be made, a plot for a single genotype showing the IBD probabilities for all
-#' parents across the genome (\code{plotType = "singleGeno"}), or a plot showing
-#' for all genotypes the probabilities of the parent with the highest
-#' probability per marker (\code{plotType = "allGeno"}).
+#' Creates a plot for an object of class \code{IBDprob}. Three types of plot can
+#' be made:
+#' \itemize{
+#' \item{\code{singleGeno}}{ A plot for a single genotype showing the IBD
+#' probabilities for all parents across the genome.}
+#' \item{\code{allGeno}}{ A plot showing for all genotypes the IBD
+#' probabilities of the parent with the highest probability per marker.}
+#' \item{\code{pedigree}}{ A plot showing the structure of the pedigree of
+#' the population.}
+#' }
 #'
 #' @param x An object of class \code{IBDprob}.
 #' @param ... Further arguments. Unused.
 #' @param plotType A character string indicating the type of plot that should
 #' be made.
 #' @param genotype A character string indicating the genotype for which the
-#' plot should be made. Ignored if \code{plotType = "allGeno"}.
+#' plot should be made. Only for \code{plotType = "singleGeno"}.
 #' @param title A character string, the title of the plot.
 #' @param output Should the plot be output to the current device? If
 #' \code{FALSE}, only a ggplot object is invisibly returned.
@@ -150,86 +161,39 @@ c.IBDprob <- function(...) {
 #' plot(SxMIBD_Ext,
 #'      plotType = "allGeno")
 #'
+#' ## Plot sturcture of the pedigree.
+#' plot(SxMIBD_Ext,
+#'      plotType = "pedigree")
+#'
 #' @export
 plot.IBDprob <- function(x,
                          ...,
-                         plotType = c("singleGeno", "allGeno"),
+                         plotType = c("singleGeno", "allGeno", "pedigree"),
                          genotype,
                          title = NULL,
                          output = TRUE) {
   map <- x$map
   markers <- x$markers
   parents <- x$parents
+  pedigree <- x$pedigree
+  multiCross <- x$multiCross
+  popType <- x$popType
+  genoCross <- attr(x = x, which = "genoCross")
   ## Input checks.
   plotType <- match.arg(plotType)
   if (!is.null(title) && (!inherits(title, "character") || length(title) > 1)) {
     stop("title should be a character string.\n")
   }
   if (plotType == "singleGeno") {
-    if (!inherits(genotype, "character") || length(genotype) > 1) {
-      stop("genotype should be a character string.\n")
-    }
-    if (!genotype %in% dimnames(markers)[[2]]) {
-      stop(paste("genotype", genotype, "not defined\n"))
-    }
-    ## Convert to long format for plotting.
-    markersLong <- markers3DtoLong(x)
-    ## Merge map info to probabilities.
-    plotDat <- merge(markersLong, map, by.x = "snp", by.y = "row.names")
-    ## Restrict to selected genotype.
-    plotDat <- plotDat[plotDat[["genotype"]] == genotype, ]
-    ## Construct title.
-    if (is.null(title)) {
-      title <- genotype
-    }
-    p <- ggplot2::ggplot(plotDat,
-                         ggplot2::aes_string(x = "pos", y = "parent",
-                                             fill = "prob")) +
-      ggplot2::geom_tile(width = 3) +
-      ggplot2::facet_grid(". ~ chr", scales = "free", space = "free",
-                          switch = "both") +
-      ggplot2::scale_fill_gradient(low = "white", high = "black") +
-      ggplot2::scale_x_continuous(expand = c(0, 0)) +
-      ggplot2::scale_y_discrete(expand = c(0, 0)) +
-      ggplot2::labs(title = title) +
-      ggplot2::theme(
-        plot.title = ggplot2::element_text(hjust = 0.5),
-        panel.background = ggplot2::element_blank(),
-        panel.spacing.x = ggplot2::unit(4, "mm"))
+    p <- singleGenoPlot(markers = markers, map = map, parents = parents,
+                        genotype = genotype, title = title)
   } else if (plotType == "allGeno") {
-    ## Get max IBD value and parent per marker-position combination.
-    maxVals <- apply(X = markers, MARGIN = 1:2, FUN = max)
-    maxPars <- parents[apply(X = markers, MARGIN = 1:2, FUN = which.max)]
-    nGeno <- nrow(maxVals)
-    ## Create plot data.
-    plotDat <- data.frame(marker = factor(dimnames(maxVals)[[1]],
-                                          levels = dimnames(maxVals)[[1]]),
-                          genotype = rep(dimnames(maxVals)[[2]], each = nGeno),
-                          maxVal = as.vector(maxVals),
-                          maxPar = as.vector(maxPars))
-    ## Construct title.
-    if (is.null(title)) {
-      title <- "IBD probabilities across the genome for all genotypes"
-    }
-    ## Get positions of start of new chromosomes.
-    newChrs <- which(!duplicated(map[["chr"]]))[-1] - 0.5
-    p <- ggplot2::ggplot(data = plotDat,
-                         ggplot2::aes_string(x = "marker", y = "genotype",
-                                             alpha = "maxVal",
-                                             fill = "maxPar"))+
-      ggplot2::geom_raster() +
-      ggplot2::labs(title = title, x = "Genome", y = "Genotypes",
-                    fill = "Parent", alpha = "Probability") +
-      ggplot2::geom_vline(xintercept = newChrs, linetype = "dashed",
-                          color = "black") +
-      ggplot2::theme(
-        panel.background = ggplot2::element_blank(),
-        plot.background = ggplot2::element_blank(),
-        axis.text = ggplot2::element_blank(),
-        axis.ticks = ggplot2::element_blank(),
-        panel.border = ggplot2::element_rect(fill = NA),
-        plot.title = ggplot2::element_text(hjust = 0.5)
-      )
+    p <- allGenoPlot(markers = markers, map = map, parents = parents,
+                     title = title)
+  } else if (plotType == "pedigree") {
+    p <- pedPlot(pedigree = pedigree, offSpring = colnames(markers),
+                 popType = popType, multiCross = multiCross,
+                 genoCross = genoCross, title = title)
   }
   if (output) {
     plot(p)
