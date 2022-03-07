@@ -337,7 +337,7 @@ As the summary shows, the output contains probabilities for four parents, A, B, 
 
 ### Multi-cross
 
-The final example shows how IBD computations for multiple populations can be combined. In the example we use simulated data for two F4DH populations, i.e. F4 population as described above followed by a doubled haploid generation. For the first population the parents where A and B, for the second the parents where A and C. This is a simple example of a NAM population, having parent A as central parent.
+The final example shows how IBD computations for multiple populations can be combined. In the example we use simulated data for two F4DH populations, i.e. F4 populations as described above followed by a doubled haploid generation. For the first population the parents where A and B, for the second the parents where A and C. This is a simple example of a NAM population, having parent A as central parent.
 
 First we compute the IBD probabilities for each of the populations separately.
 

@@ -45,6 +45,7 @@ the population.}
 }
 }
 \examples{
+\dontrun{
 ## Compute IBD probabilities for Steptoe Morex.
 ## Add extra evaluation positions in between exiting marker positions
 ## to assure evaluation positions are at most 2 cM apart.
@@ -67,5 +68,6 @@ plot(SxMIBD_Ext,
 ## Plot sturcture of the pedigree.
 plot(SxMIBD_Ext,
      plotType = "pedigree")
+}
 
 }

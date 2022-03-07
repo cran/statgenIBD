@@ -1,7 +1,7 @@
-23886bb57f6ccf6c93c22725c505cd96 *DESCRIPTION
+14fc35b8b4ef67ed933bebfba82bacfd *DESCRIPTION
 2462716c9cdc848342335e2c6300a107 *NAMESPACE
-7abb0d51c624831b31ec07490ab10301 *NEWS.md
-d50313028c6b2a7d579a8a42f57d9e4a *R/IBDprob.R
+bba9b9cefe784577c101133813e38e2f *NEWS.md
+33b3004d460f2cb1c51db5c526637286 *R/IBDprob.R
 216fab45ba68f3658735af6df18053ea *R/RcppExports.R
 c13e41137e27df93a1f5e78f7e13a0b0 *R/allGenoPlot.R
 b6566a8ac437658c23a028678987f699 *R/getProbs.R
@@ -15,8 +15,8 @@ f2cd2d044d828ad5bf57994f27c9e1e3 *R/zzz.R
 48ba9a6cd98985440e48f32033ce1f6a *build/vignette.rds
 f3890ffa98cf5516421a5ed09a2b14c2 *cleanup
 092e6be0ed4d90aeaa542101dfe8f9cf *inst/doc/IBDCalculations.R
-973f4c7c268628c2b2258e5f0d852b42 *inst/doc/IBDCalculations.Rmd
-c7059c406abad76d40d91566eaf063a4 *inst/doc/IBDCalculations.html
+29cb319de0c3bbb4233ede56d8043377 *inst/doc/IBDCalculations.Rmd
+a96412732e72e19351192b94ad513179 *inst/doc/IBDCalculations.html
 748ebe3ce7bf92423860c1f4618ebdee *inst/extdata/SxM/SxM_eval.txt
 2038f5a11a102fbabbfb2a9de6807556 *inst/extdata/SxM/SxM_geno.txt
 f1fd473d3147b6a0e77ef9f362889e8b *inst/extdata/SxM/SxM_map.txt
@@ -45,7 +45,7 @@ fa3f970df7fe072a78b5c6d3210d9210 *man/c.IBDprob.Rd
 951484ba6736a24b220bab5e6a80973f *man/calcIBD.Rd
 27eac348f38bbf19ca5437f5dd4abdee *man/getProbs.Rd
 b25da7dc0d6c7462ee1bfdcee561100c *man/pedPlot.Rd
-9e3317ac8f089b8f76169a9a1ab77a00 *man/plot.IBDprob.Rd
+b1f3bfe9c0bd3f0cc44bd6016b449210 *man/plot.IBDprob.Rd
 50daa942dd421d0f3c12aa5ecab1f513 *man/singleGenoPlot.Rd
 e351e0f01db8b3b12b1b79651a8282f4 *man/statgenIBD-package.Rd
 29b093d83c37111d3dd783e8cd3c12b3 *man/summary.IBDprob.Rd
@@ -69,7 +69,7 @@ d812370569c1e0468463c5bd743b2fbe *src/general/matvec.h
 1080ebd0b24e50f4794de91abc41b7eb *src/general/misc.h
 3dd298056038d4b9c49ce38855a59b75 *src/general/util_genetics.cpp
 f17535cb2951fb1d3c8826243a59acca *src/general/util_genetics.h
-f6ee1d360111ec8d276650f30ce9c378 *src/pedigree/Loc.cpp
+c47111267a0ff5b3f8a9199e78eff63b *src/pedigree/Loc.cpp
 d9ebb27d48bf051863d08679307e9dd6 *src/pedigree/Loc.h
 f386dd4f3d9ec253eb166d9da81d643f *src/pedigree/analysis_fam.cpp
 87533005444d274d14fd25569f0e141d *src/pedigree/analysis_fam.h
@@ -84,6 +84,6 @@ b537896608f3a6086e9083452f38e849 *src/pedigree/markerscore.cpp
 42d69396a9df9df40b75055e01754208 *src/pedigree/read_map.cpp
 7f8f6dea744a667f6685a32c5632a65f *src/pedigree/read_map.h
 17bbc7b0998cac9a0144177c0dc0569f *tests/tinytest.R
-973f4c7c268628c2b2258e5f0d852b42 *vignettes/IBDCalculations.Rmd
+29cb319de0c3bbb4233ede56d8043377 *vignettes/IBDCalculations.Rmd
 1308659265e2eb087728ec1358dbcfe1 *vignettes/SxM_flapjack.png
 f1a270aaad0f4a1c7ecaa245383d2506 *vignettes/bibliography.bib

@@ -142,6 +142,7 @@ c.IBDprob <- function(...) {
 #' @return A ggplot object is invisibly returned.
 #'
 #' @examples
+#' \dontrun{
 #' ## Compute IBD probabilities for Steptoe Morex.
 #' ## Add extra evaluation positions in between exiting marker positions
 #' ## to assure evaluation positions are at most 2 cM apart.
@@ -164,6 +165,7 @@ c.IBDprob <- function(...) {
 #' ## Plot sturcture of the pedigree.
 #' plot(SxMIBD_Ext,
 #'      plotType = "pedigree")
+#' }
 #'
 #' @export
 plot.IBDprob <- function(x,

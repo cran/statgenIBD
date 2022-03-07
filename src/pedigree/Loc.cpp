@@ -12,7 +12,7 @@ int compare(const Locus& locA,
 	int intA = -1, intB = -1;
 	try {intA = std::stoi(locA.chr); } catch (...) {}
 	try {intB = std::stoi(locB.chr); } catch (...) {}
-	
+
 	if (intA < intB) return -1;
 	if (intA > intB) return 1;
 
@@ -47,9 +47,24 @@ int pos_qtl(const LinkageMap& Markermap,
             const Locus& QTLpos)
 {
 	int nloc = Markermap.size();
-	for (int i=0;i<nloc-1;i++)
-		if (QTLpos >= Markermap[i] && QTLpos <= Markermap[i+1])
-			return i;
+  int start = 0;
+  int end = nloc-1;
+
+  while(start<=end)
+  {
+    int m = (start+end)/2;
+    if (QTLpos >= Markermap[m] && QTLpos <= Markermap[m+1])
+      return m;
+    if (QTLpos < Markermap[m])
+      end = m-1;
+    else
+      start = m+1;
+  }
+  //return -1;
+  //
+	//for (int i=0;i<nloc-1;i++)
+	//	if (QTLpos >= Markermap[i] && QTLpos <= Markermap[i+1])
+	//		return i;
 	throw ibd_error("Evaluation point not in interval!");
 	return 0; // dummy
 }

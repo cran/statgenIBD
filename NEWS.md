@@ -1,3 +1,7 @@
+# statgenIBD 1.0.4
+
+* Increased speed of IBD calculations by improving an inefficient part of the algorithm.
+
 # statgenIBD 1.0.3
 
 * It is now possible to plot the pedigree of an object of class `IBDprob` by specifying `plotType = "pedigree"`.
