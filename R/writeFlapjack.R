@@ -38,10 +38,10 @@ writeFlapjack <- function(IBDprob,
   markers <- IBDprob$markers
   parents <- IBDprob$parents
   nPar <- length(parents)
-  nGeno <- dim(markers)[[2]]
-  nMarkers <- dim(markers)[[1]]
+  nGeno <- dim(markers)[[1]]
+  nMarkers <- dim(markers)[[2]]
   ## Use first marker to get parent combinations present in output.
-  mrk1 <- rownames(markers)[1]
+  mrk1 <- colnames(markers)[1]
   parVals <- colnames(getProbs(IBDprob, mrk1))[-1]
   parVals <- gsub(pattern = paste0(mrk1, "_"), replacement = "", x = parVals)
   for (i in seq_along(parents)) {
@@ -50,7 +50,7 @@ writeFlapjack <- function(IBDprob,
   }
   parVals <- substring(parVals, first = 1, last = nchar(parVals) - 1)
   ## Create output.
-  res <- sapply(X = rownames(markers), FUN = function(marker) {
+  res <- sapply(X = colnames(markers), FUN = function(marker) {
     mrkProbs <- getProbs(IBDprob, marker)[-1]
     apply(mrkProbs, MARGIN = 1, FUN = function(x) {
       if (length(which(x > (0.5 + 0.15 / nPar))) == 1) {
@@ -61,9 +61,9 @@ writeFlapjack <- function(IBDprob,
     })
   })
   ## Convert to matrix.
-  res <- matrix(data = res, nrow = nGeno, dimnames = dimnames(markers)[2:1])
+  res <- matrix(data = res, nrow = nGeno, dimnames = dimnames(markers)[1:2])
   resPar <- matrix(data = seq_along(parents), nrow = nPar, ncol = nMarkers,
-                   dimnames = list(parents, dimnames(markers)[[1]]))
+                   dimnames = list(parents, colnames(markers)))
   res <- rbind(resPar, res)
   ## Write map file.
   cat(file = outFileMap, "# fjFile = MAP\n")

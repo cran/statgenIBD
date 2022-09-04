@@ -68,7 +68,7 @@ In the package, IBD probabilities can be calculated for many different types of 
 | C4SxDH              | four-way   | C4, followed by x generations of selfing and DH generation | 6          |
 +---------------------+------------+------------------------------------------------------------+------------+
 
-For IBD calculations of more complex population types, including MAGIC and population with complicated pedigree structure, see [RABBIT](https://github.com/chaozhi/RABBIT) software [@Zheng2014; @Zheng2015; @Zheng2018].
+For IBD calculations of more complex population types, including MAGIC and population with complicated pedigree structure, see [RABBIT](https://github.com/chaozhi/RABBIT) software [@Zheng2014; @Zheng2015; @Zheng2018]. The IBDs calculated using RABBIT can be imported into statgenIBD as well, see [Importing IBD probabilities computed using RABBIT](#rab).
 
 ## Examples
 
@@ -120,32 +120,42 @@ The output of the `calcIBD` function is an object of class `IBDprob`. This objec
 +============+==============+========================================================================================================================================================================================================================================================+
 | map        | `data.frame` | The map for the population.                                                                                                                                                                                                                            |
 +------------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| markers    | `array`      | A three dimensional array with the IBD probabilities. The dimensions of this array are \#markers x \#genotypes x \#parents. The array contains per combination of marker and genotypes the probabilities that it descended from either of the parents. |
+| markers    | `array`      | A three dimensional array with the IBD probabilities. The dimensions of this array are \#genotypes x \#markers x \#parents. The array contains per combination of genotypes and marker the probabilities that it descended from either of the parents. |
 +------------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | popType    | `character`  | The population type.                                                                                                                                                                                                                                   |
 +------------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | parents    | `character`  | The parents.                                                                                                                                                                                                                                           |
 +------------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| multiCross | `logical`    | An indicator showing whether in this `IBDprob` object multiple crosses where combined. This is always `FALSE` for the output of the `calcIBD` function, but will be `TRUE` when multiple crosses are combined as we will see in the examples.          |
-+------------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 The `summary` function can be used to get a short description of the content of a `IBDprob` object.
 
-Looking at genotype **dh001** and marker **plc** we can see from the genotypic file printed above that it has a value of 2, equal to that of Steptoe. If we now look at the output of `calcIBD` it shows a value of 1 for pSteptoe and a value of 0 for pMorex.
+Looking at genotype **dh001** and marker **plc** we can see from the genotypic file printed above that it has a value of 2, equal to that of Steptoe. If we now look at the output of `calcIBD` it shows a value of 1 for Steptoe and a value of 0 for Morex.
 
 ```{r check_dh001_plc}
-SxMIBD$markers["plc", "dh001", ]
+SxMIBD$markers["dh001", "plc", ]
 ```
 
 For the combination of marker **abg313b** and genotype **dh005** the genotypic file contained a missing value. Looking at the output we can see that the probability that this marker came from Morex is about 0.67 and the probability that it came from Steptoe is about 0.33.
 
 ```{r check_dh005_abg313b}
-SxMIBD$markers["abg313b", "dh005", ]
+SxMIBD$markers["dh005", "abg313b", ]
 ```
 
 ### Visualizing results
 
-The calculated IBD probabilities can be visualized using the `plot` function. Three types of plot can be made using this function. `plotType = "pedigree"` will create a plot showing the pedigree of the population for which the IBD probabilities where computed. 
+The calculated IBD probabilities can be visualized using the `plot` function. Several types of plot can be made using this function. Besides creating a plot, all plots also return a `ggplot` object that can be further customized.
+
+- a plot of the structure of the population for which the IBD probabilities were computed
+- a plot of the computed IBD probabilities per parent for a single genotype
+- a plot of the computed IBD probabilities across the genome for all genotypes
+- a plot of the coverage of each parent across the genome
+- a plot of the total coverage of each parent
+
+All plots are described in more detail in the sections below.
+
+#### Pedigree plot
+
+A plot of the structure of the population for which the IBD probabilities were computed can be made specifying `plotType = "pedigree"`. This plot is fully determined by the population type of the population for which the probabilies were computed.
 
 ```{r plotsxmIBDped}
 ### Visualize the pedigree of the population.
@@ -153,7 +163,9 @@ plot(SxMIBD,
      plotType = "pedigree")
 ```
 
-`plotType = "singleGeno"` will generate a plot of the probabilities per parent for a selected genotype. The plot for **dh005** is made below. Note that it contains a lot of white space since the markers in the file are spread widely along the genome. In the next section we will show how to compute probabilities on a denser grid.
+#### Single genotype plot
+
+`plotType = "singleGeno"` will generate a plot of the probabilities per parent for a selected genotype. The plot for **dh005** is made below. Note that it contains a lot of white space since the markers in the file are spread widely along the genome. In the next section we will show how to compute probabilities on a denser grid leading to a plot with a lot less white space. 
 
 ```{r plotsxmIBD}
 ## Visualize IBD probabilities for dh005.
@@ -162,7 +174,9 @@ plot(SxMIBD,
      genotype = "dh005")
 ```
 
-A second type of plot can be made specifying `plotType = "allGeno"`. This will generate a plot of all genotypes colored per evaluation position according to the parent with the highest probability for that combination of genotype and position. Darker colors indicate a higher probability. Dashed lines indicate the start of a new chromosome.
+#### Plot of IBD probabilities for all genotypes.
+
+When specifying `plotType = "allGeno"` a plot is made of all genotypes colored per evaluation position according to the parent with the highest probability for that combination of genotype and position. Darker colors indicate a higher probability. Dashed lines indicate the start of a new chromosome.
 
 ```{r plotsxmIBDAll}
 ## Visualize IBD probabilities for all genotypes.
@@ -170,6 +184,34 @@ plot(SxMIBD,
      plotType = "allGeno",
      genotype = "dh005")
 ```
+
+#### Plot the coverage of each parent across the genome.
+
+When specifying `plotType = "meanProbs"` a plot is made of the mean probabilities of each parent for each evaluation position. The plot can be restricted to one or more chromosomes by specifying `chr`.
+
+```{r plotsxmIBDMP}
+## Visualize coverage across genome.
+plot(SxMIBD, 
+     plotType = "meanProbs")
+```
+
+```{r plotsxmIBDMPchr2}
+## Visualize coverage across chromosome 2.
+plot(SxMIBD, 
+     plotType = "meanProbs",
+     chr = 2)
+```
+
+#### Plot the total coverage of each parent
+
+A plot of the total coverage of each parent can be made by specifying `plotType = "totalCovarage"`. This will create a bar plot of the coverage per parent over the genome. The plot can be restricted to one or more chromosomes by specifying `chr`.
+
+```{r plotsxmIBDtotCov}
+## Visualize coverage across genome.
+plot(SxMIBD, 
+     plotType = "totalCoverage")
+```
+
 
 ### Evaluation positions
 
@@ -264,6 +306,23 @@ head(SxM_probs)
 ```
 
 The output of the `getProbs` function is a `data.frame` with a column `geno` containing the genotype and for both markers the probability that it descended from Morex and that it descended from Steptoe.
+
+### Write and read tab-delimited *.txt files
+
+The results of IBD calculations can be written to a tab-delimited *.txt* file using `writeIBDs`. Details about this file format can be found in the accompanying [IBD file format vignette](IBDFileFormat.html).
+
+```{r SxMwriteIBD, eval=FALSE}
+## Write IBDs to tab-delimited .txt file.
+writeIBDs(SxMIBD_Ext, "SxMIBD_Ext.txt")
+```
+
+Likewise, IBD files can be read using the `readIBDs` method.
+
+```{r SxMreadIBD, eval=FALSE}
+## Read IBDs from tab-delimited .txt file.
+SxMIBD_Ext <- readIBDs("SxMIBD_Ext.txt", map = SxMIBD_Ext$map)
+summary(SxMIBD_Ext)
+```
 
 ### Write results to Flapjack format
 
@@ -396,6 +455,42 @@ Plotting all genotypes together also shows the clear separation between the to c
 ```{r plotMultiIBDAll}
 plot(ABC, plotType = "allGeno")
 ```
+
+## Importing IBD probabilities computed using RABBIT {#rab}
+
+Instead of performing IBD calculations directly with the package, it is also possible to import IBD probabilities computed using RABBIT software [@Zheng2014; @Zheng2015; @Zheng2018]. The main advantage of using RABBIT for IBD calculations is that it can handle complex pedigree populations and therefore can also be used in cases where the population structure is more complex than those that can be computed using `statgenIBD`, e.g. in the maize Steptoe Morex population described before.
+
+As an example we use a barley population described in @Liller2017-jz. This MPP design consists of 5 parents. Four wild parents were crossed with the cultivar Morex and then backcrossed with Morex once. Individuals from the four families from the backcrosses were then crossed with each other as in a full diallel design, which generated six F6 families through five generations of selfing. The data for this population is available in zipped format in the package.
+
+RABBIT output can be read using the `readRABBIT` function in `statgenMPP`. This has as input the standard RABBIT output summary file and the pedigree file that needs to be provided to RABBIT as well. This pedigree file is an optional input and is only used for plotting the pedigree structure of the population. 
+
+```{r barleyIBD}
+## Specify files containing RABBIT output.
+## Extract in a temporary directory.
+tempDir <- tempdir()
+inFile <- unzip(system.file("extdata/barley/barley_magicReconstruct.zip", 
+                            package = "statgenIBD"), exdir = tempDir)
+
+## Specify pedigree file.
+pedFile <- system.file("extdata/barley/barley_pedInfo.csv",
+                       package = "statgenIBD")
+
+## read RABBIT output. 
+barleyIBD <- readRABBIT(infile = inFile,
+                        pedFile = pedFile)
+```
+
+As for the previous examples, we can summarize and plot the imported data to get a first idea of its content.
+
+```{r sumPbarleyIBD}
+## Summary.
+summary(barleyIBD)
+```
+
+```{r plotPbarleyIBD}
+## Plot structure of the pedigree.
+plot(barleyIBD, plotType = "pedigree")
+``` 
 
 ```{r winddown, include = FALSE}
 options(op)

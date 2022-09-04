@@ -23,16 +23,17 @@
 #' @export
 summary.IBDprob <- function(object,
                             ...) {
-  cat("population type: ", object$popType, "\n")
-  cat("Number of evaluation points: ", nrow(object$markers), "\n")
-  cat("Number of individuals: ", ncol(object$markers),"\n")
+  cat("population type: ",
+      if (is.null(object$popType)) "undefined" else object$popType, "\n")
+  cat("Number of evaluation points: ", ncol(object$markers), "\n")
+  cat("Number of individuals: ", nrow(object$markers),"\n")
   cat("Parents: ", object$parents, "\n")
 }
 
 #' Concatenate function for objects of class IBDprob
 #'
 #' Concatenates objects of class \code{IBDprob}. All objects that are
-#' concatenated  should have the same population type and the same map. The
+#' concatenated should have the same population type and the same map. The
 #' function is mainly meant for combining information for multiple crosses
 #' with overlapping parents.
 #'
@@ -92,26 +93,26 @@ c.IBDprob <- function(...) {
   pedParNw <- unique(pedTot[pedTot[["par1"]] == 0 & pedTot[["par2"]] == 0, ])
   pedOffNw <- pedTot[pedTot[["par1"]] != 0 | pedTot[["par2"]] != 0, ]
   pedNw <- rbind(pedParNw, pedOffNw)
-  genoNw <- unlist(sapply(X = markerLst, FUN = colnames))
-  nGeno <- sapply(X = markerLst, FUN = ncol)
+  genoNw <- unlist(sapply(X = markerLst, FUN = rownames))
+  nGeno <- sapply(X = markerLst, FUN = nrow)
   genoCross <- data.frame(cross = paste0("cross",
                                          rep(seq_along(nGeno), times = nGeno)),
                           geno = genoNw)
-  markersNw <- array(dim = c(nrow(markerLst[[1]]), length(genoNw),
+  markersNw <- array(dim = c(length(genoNw), ncol(markerLst[[1]]),
                              length(parentsNw)),
-                     dimnames = list(rownames(markerLst[[1]]), genoNw, parentsNw))
-  for (i in 1:nrow(markerLst[[1]])) {
-    markersNw[i, , ] <- as.matrix(dfBind(lapply(X = markerLst, FUN = function(mrk) {
-      as.data.frame(mrk[i, , ])
+                     dimnames = list(genoNw, colnames(markerLst[[1]]),
+                                     parentsNw))
+  for (i in 1:ncol(markerLst[[1]])) {
+    markersNw[, i, ] <- as.matrix(dfBind(lapply(X = markerLst, FUN = function(mrk) {
+      as.data.frame(mrk[, i, ])
     })))
   }
   res <- structure(list(map = map,
                         markers = markersNw,
                         popType = pops,
                         parents = parents,
-                        pedigree = pedNw,
-                        multiCross = TRUE),
-                   class = "IBDprob",
+                        pedigree = pedNw),
+                   class = c("IBDprob", "list"),
                    genoCross = genoCross)
   return(res)
 }
@@ -127,6 +128,10 @@ c.IBDprob <- function(...) {
 #' probabilities of the parent with the highest probability per marker.}
 #' \item{\code{pedigree}}{ A plot showing the structure of the pedigree of
 #' the population.}
+#' \item{\code{meanProbs}}{ A plot showing the coverage of each parent across
+#' the population.}
+#' \item{\code{totalCoverage}}{ A plot showing the total coverage of each
+#' parent.}
 #' }
 #'
 #' @param x An object of class \code{IBDprob}.
@@ -135,6 +140,10 @@ c.IBDprob <- function(...) {
 #' be made.
 #' @param genotype A character string indicating the genotype for which the
 #' plot should be made. Only for \code{plotType = "singleGeno"}.
+#' @param chr A character vector indicating the chromosomes to which the
+#' coverage should be restricted. Only for \code{plotType = "meanProbs"} and
+#' \code{plotType = "totalCoverage"}. If \code{NULL} all chromosomes are
+#' included.
 #' @param title A character string, the title of the plot.
 #' @param output Should the plot be output to the current device? If
 #' \code{FALSE}, only a ggplot object is invisibly returned.
@@ -162,23 +171,32 @@ c.IBDprob <- function(...) {
 #' plot(SxMIBD_Ext,
 #'      plotType = "allGeno")
 #'
-#' ## Plot sturcture of the pedigree.
+#' ## Plot structure of the pedigree.
 #' plot(SxMIBD_Ext,
 #'      plotType = "pedigree")
+#'
+#' ## Plot coverage across population.
+#' plot(SxMIBD_Ext,
+#'      plotType = "meanProbs")
+#'
+#' ## Plot total coverage.
+#' plot(SxMIBD_Ext,
+#'      plotType = "totalCoverage")
 #' }
 #'
 #' @export
 plot.IBDprob <- function(x,
                          ...,
-                         plotType = c("singleGeno", "allGeno", "pedigree"),
+                         plotType = c("singleGeno", "allGeno", "pedigree",
+                                      "meanProbs", "totalCoverage"),
                          genotype,
+                         chr = NULL,
                          title = NULL,
                          output = TRUE) {
   map <- x$map
   markers <- x$markers
   parents <- x$parents
   pedigree <- x$pedigree
-  multiCross <- x$multiCross
   popType <- x$popType
   genoCross <- attr(x = x, which = "genoCross")
   ## Input checks.
@@ -193,9 +211,17 @@ plot.IBDprob <- function(x,
     p <- allGenoPlot(markers = markers, map = map, parents = parents,
                      title = title)
   } else if (plotType == "pedigree") {
-    p <- pedPlot(pedigree = pedigree, offSpring = colnames(markers),
-                 popType = popType, multiCross = multiCross,
-                 genoCross = genoCross, title = title)
+    if (is.null(pedigree)) {
+      stop("pedigree plot can only be made if pedigree information is available.\n")
+    }
+    p <- pedPlot(pedigree = pedigree, offSpring = rownames(markers),
+                 popType = popType, genoCross = genoCross, title = title)
+  } else if (plotType == "meanProbs") {
+    p <- meanProbsPlot(markers = markers, map = map, parents = parents,
+                       chr = chr, title = title)
+  } else if (plotType == "totalCoverage") {
+     p <- totalCoveragePlot(markers = markers, map = map, parents = parents,
+                            chr = chr, title = title)
   }
   if (output) {
     plot(p)

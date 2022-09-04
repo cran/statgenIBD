@@ -1,0 +1,96 @@
+---
+title: "IBD probabilities file format"
+author: "Johannes Kruisselbrink"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: false
+    number_sections: true
+bibliography: bibliography.bib
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{IBD probabilities file format}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.dim = c(7, 4)
+)
+library(statgenIBD)
+op <- options(width = 90)
+```
+
+## File format
+
+The results of IBD probability calculations can be stored to and loaded from plain text, tab-delimited *.txt* or *.ibd* files using the functions `writeIBDs` and `readIBDs`. An IBD file should contain a header line, with the first and second header named *Marker* and *Genotype* to indicate the marker names and genotype names columns. The remaining headers should contain the parent names to indicate the columns holding the parent IBD probabilities. Each row in the file should hold the IBD probabilities of the corresponding marker and genotype. I.e., the probability that marker 'x' of genotype 'y' descends from parent 'z'.
+
+An example of the contents of a file with IBD probabilities is shown in the table below:
+
+| Marker | Genotype | Parent1 | Parent2 | ... | ParentN |
+|--------|----------|---------|---------|-----|---------|
+| M001   | G001     | 0.5     | 0.5     | ... | 0       |
+| M001   | G002     | 0       | 1       | ... | 0       |
+| M001   | G003     | 0       | 0.5     | ... | 0.5     |
+| ...    | ...      | ...     | ...     | ... | ...     |
+| M002   | G001     | 0       | 0.5     | ... | 0.5     |
+| M002   | G002     | 0.25    | 0.75    | ... | 0       |
+| ...    | ...      | ...     | ...     | ... | ...     |
+
+Note that for large data sets, this file can become very large. It is therefore recommended to store this file in a compressed file format. This can be done directly setting `compress = TRUE` in `writeIBDs`.
+
+## Examples
+
+### Writing IBD probabilities to a file
+
+After having computed IBD probabilities, the results can be written to a *.txt* or *.ibd* file using `writeIBDs`.
+
+```{r SxMwriteIBD}
+## Compute IBD probabilities for Steptoe Morex.
+SxMIBD <- calcIBD(popType = "DH",
+                  markerFile = system.file("extdata/SxM", "SxM_geno.txt",
+                                           package = "statgenIBD"),
+                  mapFile = system.file("extdata/SxM", "SxM_map.txt",
+                                        package = "statgenIBD"))
+
+## Write IBDs to tab-delimited .txt file.
+writeIBDs(SxMIBD, "SxM-IBD.txt")
+```
+
+The created file will look like as follows:
+
+```{r echo=FALSE}
+ibdFile <- system.file("extdata/SxM", "SxM_IBDs.txt", package = "statgenIBD")
+ibds <- read.delim(ibdFile)
+knitr::kable(head(ibds))
+```
+
+When writing the probabilities to a file it is possible to set the maximum number of decimals written for the probabilities using the `decimals` argument. By default 6 decimals are written to the output. Trailing zeros are always removed. Values lower than a threshold specified by `minProb` can be set to 0.
+
+```{r, eval=FALSE}
+## Write IBDs to file, set values <0.05 to zero and only print 3 decimals.
+writeIBDs(IBDprob = SxMIBD, outFile = tempfile(fileext = ".txt"),
+          decimals = 3, minProb = 0.05)
+```
+
+### Reading IBD probabilities from file
+
+Retrieving the IBD probabilities later on can be done using `readIBDs`. This requires the not only the file with IBD probabilities, but also the corresponding map file as a `data.frame`. In this example we can use the map from the `SxMIBD` object constructed earlier.
+
+```{r SxMreadIBD}
+## Get map.
+SxMMap <- SxMIBD$map
+
+## Read IBDs to tab-delimited .txt file.
+SxMIBD <- readIBDs("SxM-IBD.txt", map = SxMMap)
+summary(SxMIBD)
+```
+
+When reading the probabilities all values read are rescaled in such a way that the sum of the probabilities for each genotype x marker combination is equal to 1.
+
+```{r, echo=FALSE, results='hide'}
+unlink("SxM-IBD.txt")
+```

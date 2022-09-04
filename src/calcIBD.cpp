@@ -65,11 +65,9 @@ using namespace ibd;
 //' \describe{
 //' \item{map}{a \code{data.frame} with chromosome and position of the markers.}
 //' \item{markers}{a 3-dimensional \code{array} of IBD probabilities with
-//' markers, genotypes and  parents as array dimensions.}
+//' genotypes, markers and parents as array dimensions.}
 //' \item{parents}{the parents.}
 //' \item{popType}{the population type.}
-//' \item{multiCross}{a logical value indicating if multiple crosses have been
-//' combined in the \code{IBDprob} object.}
 //' }
 //'
 //' @examples
@@ -113,7 +111,7 @@ List calcIBD(CharacterVector& popType,
   int x;
   bool isDH = _poptype.find("DH") != std::string::npos;
   bool isBC = match(x, _poptype, "BCx");
-  bool isC3C4 = ((_poptype == "C3") | (_poptype == "C4"));
+  bool isC3C4 = ((_poptype == "C3") || (_poptype == "C4"));
   LinkageMap positions;
   arma::cube prob;
   vector<string> parents, offspring;
@@ -159,28 +157,28 @@ List calcIBD(CharacterVector& popType,
   CharacterVector parentNames (0);
   if (!isC3C4)
   {
-	for (int i = 0; i < npar; i++)
-	 {
-       if (!(isBC && i == 0))
-         {
-           parentNames.push_back("p" + parents[i]);
-         }
-     }
+    for (int i = 0; i < npar; i++)
+    {
+      if (!(isBC && i == 0))
+      {
+        parentNames.push_back(parents[i]);
+      }
+    }
   }
   if (!isDH)
   {
     if (npar == 2)
     {
-      parentNames.push_back("p" + parents[0] + parents[1]);
+      parentNames.push_back(parents[0] + parents[1]);
     } else if (npar == 3)
     {
-      parentNames.push_back("p" + parents[0] + parents[2]);
-      parentNames.push_back("p" + parents[1] + parents[2]);
+      parentNames.push_back(parents[0] + parents[2]);
+      parentNames.push_back(parents[1] + parents[2]);
     } else if (npar == 4) {
-      parentNames.push_back("p" + parents[0] + parents[2]);
-      parentNames.push_back("p" + parents[0] + parents[3]);
-      parentNames.push_back("p" + parents[1] + parents[2]);
-      parentNames.push_back("p" + parents[1] + parents[3]);
+      parentNames.push_back(parents[0] + parents[2]);
+      parentNames.push_back(parents[0] + parents[3]);
+      parentNames.push_back(parents[1] + parents[2]);
+      parentNames.push_back(parents[1] + parents[3]);
     }
   }
   // Construct map data.frame from positions.
@@ -202,21 +200,20 @@ List calcIBD(CharacterVector& popType,
   for (int k = 0; k < K; k++) {
     ID(k) = pop[k].GetID();
     par1(k) = pop[k].GetP1();
-	par2(k) = pop[k].GetP2();
+    par2(k) = pop[k].GetP2();
     type(k) = pop[k].GetType();
   }
   DataFrame pedigree = DataFrame::create(Named("ID") = ID, Named("par1") = par1,
                                          Named("par2") = par2, Named("type") = type);
   // Reshape prob to 3D array and add names to dimensions.
   NumericVector P = wrap(prob);
-  P.attr("dimnames") = List::create(posNames, offspring, parentNames);
+  P.attr("dimnames") = List::create(offspring, posNames, parentNames);
   // Create result list.
   List res = List::create(Named("map") = map,
                           Named("markers") = P,
                           Named("popType") = popType,
                           Named("parents") = parents,
-						  Named("pedigree") = pedigree,
-                          Named("multiCross") = false);
+                          Named("pedigree") = pedigree);
   res.attr("class") = "IBDprob";
 
   return res;

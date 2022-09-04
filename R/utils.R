@@ -31,9 +31,9 @@ dfBind <- function(dfList) {
 chkFile <- function(outFile,
                     fileType = "csv") {
   if (!is.character(outFile) || length(outFile) > 1 ||
-      tools::file_ext(outFile) != fileType) {
+      !tools::file_ext(outFile) %in% fileType) {
     stop("outFile should be a single character string ending in .",
-         fileType, ".\n")
+         paste(fileType, collapse = " or"), ".\n")
   }
   if (file.access(dirname(outFile), 2)) {
     stop("No permission to write to ", outFile, ".\n")
@@ -51,26 +51,24 @@ markers3DtoLong <- function(markers,
                             markerSel = NULL) {
   ## Restrict markers to selected markers
   if (!is.null(markerSel)) {
-    markers <- markers[markerSel, , , drop = FALSE]
+    markers <- markers[, markerSel, , drop = FALSE]
   }
   markerCols <- dimnames(markers)[[3]]
   ## Create base data.frame for storing long format data.
-  markersLongBase <- expand.grid(snp = dimnames(markers)[[1]],
-                                 genotype = dimnames(markers)[[2]])
+  markersLongBase <- expand.grid(snp = colnames(markers),
+                                 genotype = rownames(markers))
   markersLong <- NULL
   for (parent in parents) {
-    ## Construct parent column.
-    parentCol <- paste0("p", parent)
     ## Get other columns containing parent.
     parentSubCols <- markerCols[grep(pattern = parent, x = markerCols)]
-    parentSubCols <- parentSubCols[-which(parentSubCols == parentCol)]
+    parentSubCols <- parentSubCols[-which(parentSubCols == parent)]
     ## Add values for parent to base.
     markersParent <- markersLongBase
     markersParent[["parent"]] <- parent
     ## Compute probability for parent.
     ## (2 * pPar + psubPar) / 2
     markersParent[["prob"]] <-
-      c(markers[, , parentCol] +
+      c(markers[, , parent] +
           apply(X = markers[, , parentSubCols, drop = FALSE],
                 MARGIN = 1:2, FUN = sum) / 2)
     ## Add to markersLong

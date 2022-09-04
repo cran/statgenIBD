@@ -91,11 +91,11 @@ arma::cube calc_IBDs(const vector<IndProp>& pop,
       IBD_fam IBD_ind(par,geno[r],markermap,type);
       arma::mat P = calc_P(eval_pos,npar,IBD_ind);
       if (Z.n_slices == 0) {
-        Z.resize(P.n_rows, 1, P.n_cols);
+        Z.resize(1, P.n_rows, P.n_cols);
       } else {
-        Z.insert_cols(Z.n_cols, 1);
+        Z.insert_rows(Z.n_rows, 1);
       }
-      Z.col(Z.n_cols - 1) = P;
+      Z.row(Z.n_rows - 1) = P;
     }
     r++;
   }

@@ -33,7 +33,6 @@ expect_equal(ABC$map, AB$map)
 expect_equal_to_reference(ABC$markers, "ABC_markers")
 expect_equal(ABC$parents, c("A", "B", "C"))
 expect_equal(ABC$popType, AB$popType)
-expect_true(ABC$multiCross)
 
 ## Check that genoCross attribute is added correctly.
 genoCross <- attr(x = ABC, which = "genoCross")
@@ -42,10 +41,5 @@ expect_inherits(genoCross, "data.frame")
 expect_equal(genoCross[["cross"]],
              rep(c("cross1", "cross2"), times = c(100, 80)))
 expect_equal(genoCross[["geno"]],
-             c(dimnames(AB$markers)[[2]], dimnames(AC$markers)[[2]]))
-
-
-
-
-
+             c(rownames(AB$markers), rownames(AC$markers)))
 

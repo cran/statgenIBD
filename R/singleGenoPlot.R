@@ -9,7 +9,7 @@ singleGenoPlot <- function(markers,
   if (!inherits(genotype, "character") || length(genotype) > 1) {
     stop("genotype should be a character string.\n")
   }
-  if (!genotype %in% dimnames(markers)[[2]]) {
+  if (!genotype %in% rownames(markers)) {
     stop(paste("genotype", genotype, "not defined\n"))
   }
   ## Convert to long format for plotting.
@@ -18,6 +18,9 @@ singleGenoPlot <- function(markers,
   plotDat <- merge(markersLong, map, by.x = "snp", by.y = "row.names")
   ## Restrict to selected genotype.
   plotDat <- plotDat[plotDat[["genotype"]] == genotype, ]
+  ## Convert chr to factor to keep ordering intact.
+  plotDat[["chr"]] <- factor(plotDat[["chr"]],
+                             levels = unique(map[["chr"]]))
   ## Construct title.
   if (is.null(title)) {
     title <- genotype

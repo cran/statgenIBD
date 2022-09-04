@@ -6,13 +6,13 @@ allGenoPlot <- function(markers,
                         parents,
                         title) {
   ## Get max IBD value and parent per marker-position combination.
-  maxVals <- apply(X = markers, MARGIN = 1:2, FUN = max)
-  maxPars <- parents[apply(X = markers, MARGIN = 1:2, FUN = which.max)]
-  nGeno <- nrow(maxVals)
+  maxVals <- apply(X = markers, MARGIN = 2:1, FUN = max)
+  maxPars <- parents[apply(X = markers, MARGIN = 2:1, FUN = which.max)]
+  nMarkers <- nrow(maxVals)
   ## Create plot data.
-  plotDat <- data.frame(marker = factor(dimnames(maxVals)[[1]],
-                                        levels = dimnames(maxVals)[[1]]),
-                        genotype = rep(dimnames(maxVals)[[2]], each = nGeno),
+  plotDat <- data.frame(marker = factor(rownames(maxVals),
+                                        levels = rownames(maxVals)),
+                        genotype = rep(colnames(maxVals), each = nMarkers),
                         maxVal = as.vector(maxVals),
                         maxPar = as.vector(maxPars))
   ## Construct title.

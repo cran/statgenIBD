@@ -43,7 +43,7 @@ getProbs <- function(IBDprob,
   if (is.null(markers) || !is.character(markers)) {
     stop("markers should be a character vector\n")
   }
-  missMrk <- markers[!markers %in% rownames(IBDprob$markers)]
+  missMrk <- markers[!markers %in% colnames(IBDprob$markers)]
   if (length(missMrk) > 0) {
     stop("The following markers are not in ", deparse(substitute(IBDprob)), ": ",
          paste(missMrk, collapse = ", "), "\n")
@@ -54,11 +54,10 @@ getProbs <- function(IBDprob,
                                           parents = IBDprob$parents,
                                           markerSel = markers))
   } else {
-    ## probabilites are taken directly from array, so leaving pA and PAB in.
+    ## probabilites are taken directly from array, so leaving pA and pAB in.
     probs <- lapply(X = markers, FUN = function(marker) {
-      prob <- IBDprob$markers[marker, , ]
-      colnames(prob) <- paste0(marker, "_",
-                               substring(colnames(prob), first = 2))
+      prob <- IBDprob$markers[, marker, ]
+      colnames(prob) <- paste0(marker, "_", colnames(prob))
       return(prob)
     })
     probs <- as.data.frame(do.call(cbind, probs))

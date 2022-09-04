@@ -7,8 +7,9 @@
 \method{plot}{IBDprob}(
   x,
   ...,
-  plotType = c("singleGeno", "allGeno", "pedigree"),
+  plotType = c("singleGeno", "allGeno", "pedigree", "meanProbs", "totalCoverage"),
   genotype,
+  chr = NULL,
   title = NULL,
   output = TRUE
 )
@@ -23,6 +24,11 @@ be made.}
 
 \item{genotype}{A character string indicating the genotype for which the
 plot should be made. Only for \code{plotType = "singleGeno"}.}
+
+\item{chr}{A character vector indicating the chromosomes to which the
+coverage should be restricted. Only for \code{plotType = "meanProbs"} and
+\code{plotType = "totalCoverage"}. If \code{NULL} all chromosomes are
+included.}
 
 \item{title}{A character string, the title of the plot.}
 
@@ -42,6 +48,10 @@ probabilities for all parents across the genome.}
 probabilities of the parent with the highest probability per marker.}
 \item{\code{pedigree}}{ A plot showing the structure of the pedigree of
 the population.}
+\item{\code{meanProbs}}{ A plot showing the coverage of each parent across
+the population.}
+\item{\code{totalCoverage}}{ A plot showing the total coverage of each
+parent.}
 }
 }
 \examples{
@@ -65,9 +75,17 @@ plot(SxMIBD_Ext,
 plot(SxMIBD_Ext,
      plotType = "allGeno")
 
-## Plot sturcture of the pedigree.
+## Plot structure of the pedigree.
 plot(SxMIBD_Ext,
      plotType = "pedigree")
+
+## Plot coverage across population.
+plot(SxMIBD_Ext,
+     plotType = "meanProbs")
+
+## Plot total coverage.
+plot(SxMIBD_Ext,
+     plotType = "totalCoverage")
 }
 
 }

@@ -43,3 +43,33 @@ expect_silent(p3 <- plot(SxMIBD, plotType = "pedigree"))
 
 expect_inherits(p3, "ggplot")
 
+## Test plot for mean probabilities
+
+expect_silent(p4 <- plot(SxMIBD, plotType = "meanProbs"))
+
+expect_inherits(p4, "ggplot")
+
+## Check that option chr functions correctly.
+
+expect_error(plot(SxMIBD, plotType = "meanProbs", chr = "a"),
+             "chr not found in map")
+
+expect_silent(p5 <- plot(SxMIBD, plotType = "meanProbs", chr = 3))
+
+expect_equal(nrow(p5$data), 28)
+
+## Test plot for total coverage
+
+expect_silent(p6 <- plot(SxMIBD, plotType = "totalCoverage"))
+
+expect_inherits(p6, "ggplot")
+
+## Check that option chr functions correctly.
+
+expect_error(plot(SxMIBD, plotType = "totalCoverage", chr = "a"),
+             "chr not found in map")
+
+expect_silent(p7 <- plot(SxMIBD, plotType = "totalCoverage", chr = 3))
+
+expect_equal(p7$data[["coverage"]], c(46.8607505542283, 53.1392494457717))
+

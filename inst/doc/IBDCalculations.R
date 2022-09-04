@@ -30,10 +30,10 @@ SxMIBD <- calcIBD(popType = "DH",
 summary(SxMIBD)
 
 ## ----check_dh001_plc--------------------------------------------------------------------
-SxMIBD$markers["plc", "dh001", ]
+SxMIBD$markers["dh001", "plc", ]
 
 ## ----check_dh005_abg313b----------------------------------------------------------------
-SxMIBD$markers["abg313b", "dh005", ]
+SxMIBD$markers["dh005", "abg313b", ]
 
 ## ----plotsxmIBDped----------------------------------------------------------------------
 ### Visualize the pedigree of the population.
@@ -51,6 +51,22 @@ plot(SxMIBD,
 plot(SxMIBD, 
      plotType = "allGeno",
      genotype = "dh005")
+
+## ----plotsxmIBDMP-----------------------------------------------------------------------
+## Visualize coverage across genome.
+plot(SxMIBD, 
+     plotType = "meanProbs")
+
+## ----plotsxmIBDMPchr2-------------------------------------------------------------------
+## Visualize coverage across chromosome 2.
+plot(SxMIBD, 
+     plotType = "meanProbs",
+     chr = 2)
+
+## ----plotsxmIBDtotCov-------------------------------------------------------------------
+## Visualize coverage across genome.
+plot(SxMIBD, 
+     plotType = "totalCoverage")
 
 ## ----sxmIBD_extGrid---------------------------------------------------------------------
 ## Compute IBD probabilities for Steptoe Morex.
@@ -110,6 +126,15 @@ summary(SxMIBD_evalPos)
 ## Extract marker probabilities for markers plc and ABG053.
 SxM_probs <- getProbs(SxMIBD, markers = c("plc", "ABG053"))
 head(SxM_probs)
+
+## ----SxMwriteIBD, eval=FALSE------------------------------------------------------------
+#  ## Write IBDs to tab-delimited .txt file.
+#  writeIBDs(SxMIBD_Ext, "SxMIBD_Ext.txt")
+
+## ----SxMreadIBD, eval=FALSE-------------------------------------------------------------
+#  ## Read IBDs from tab-delimited .txt file.
+#  SxMIBD_Ext <- readIBDs("SxMIBD_Ext.txt", map = SxMIBD_Ext$map)
+#  summary(SxMIBD_Ext)
 
 ## ----SxMwriteFlapjack, eval=FALSE-------------------------------------------------------
 #  ## Write results to Flapjack format.
@@ -190,6 +215,29 @@ plot(ABC, genotype = "AxC0001")
 
 ## ----plotMultiIBDAll--------------------------------------------------------------------
 plot(ABC, plotType = "allGeno")
+
+## ----barleyIBD--------------------------------------------------------------------------
+## Specify files containing RABBIT output.
+## Extract in a temporary directory.
+tempDir <- tempdir()
+inFile <- unzip(system.file("extdata/barley/barley_magicReconstruct.zip", 
+                            package = "statgenIBD"), exdir = tempDir)
+
+## Specify pedigree file.
+pedFile <- system.file("extdata/barley/barley_pedInfo.csv",
+                       package = "statgenIBD")
+
+## read RABBIT output. 
+barleyIBD <- readRABBIT(infile = inFile,
+                        pedFile = pedFile)
+
+## ----sumPbarleyIBD----------------------------------------------------------------------
+## Summary.
+summary(barleyIBD)
+
+## ----plotPbarleyIBD---------------------------------------------------------------------
+## Plot structure of the pedigree.
+plot(barleyIBD, plotType = "pedigree")
 
 ## ----winddown, include = FALSE------------------------------------------------
 options(op)

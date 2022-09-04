@@ -5,8 +5,8 @@
 pedPlot <- function(pedigree,
                     offSpring,
                     popType,
-                    multiCross,
                     genoCross,
+                    multiCross = NULL,
                     title) {
   pedDatTot <- pedigree
   isDH <- endsWith(popType, "DH")
@@ -21,7 +21,7 @@ pedPlot <- function(pedigree,
   pedDatOff <- pedDatTot[pedDatTot[["ID"]] %in% offSpring, ]
   pedDatOff <- pedDatOff[!duplicated(pedDatOff[c("par1", "par2")]), ]
   pedDatOff[["ID"]] <- if (!isC3C4) "F1" else popType
-  if (multiCross) {
+  if (!is.null(genoCross)) {
     pedDatTot[["cross"]] <- genoCross[["cross"]][match(pedDatTot[["ID"]],
                                                        genoCross[["geno"]])]
   } else {
@@ -88,7 +88,7 @@ pedPlot <- function(pedigree,
   labDat <- merge(labDat, pedDat[c("ID", "xPos", "yPos")],
                   by.x = c(c("xPos.y", "yPos.y")), by.y = c("xPos", "yPos"))
   extLab <- tail(arrowDat,
-                 if (multiCross) length(unique(genoCross[["cross"]])) else 1)
+                 if (!is.null(genoCross)) length(unique(genoCross[["cross"]])) else 1)
   extLab[["yPos.y"]] <- extLab[["yPos.x"]]
   extLab[["xPos.y"]] <- extLab[["xPos.x"]]
   extLab[["ID"]] <- popType

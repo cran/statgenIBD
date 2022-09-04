@@ -15,7 +15,7 @@ concatenated objects.
 }
 \description{
 Concatenates objects of class \code{IBDprob}. All objects that are
-concatenated  should have the same population type and the same map. The
+concatenated should have the same population type and the same map. The
 function is mainly meant for combining information for multiple crosses
 with overlapping parents.
 }
