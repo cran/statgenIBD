@@ -26,8 +26,8 @@ singleGenoPlot <- function(markers,
     title <- genotype
   }
   p <- ggplot2::ggplot(plotDat,
-                       ggplot2::aes_string(x = "pos", y = "parent",
-                                           fill = "prob")) +
+                       ggplot2::aes(x = .data[["pos"]], y = .data[["parent"]],
+                                    fill = .data[["prob"]])) +
     ggplot2::geom_tile(width = 3) +
     ggplot2::facet_grid(". ~ chr", scales = "free", space = "free",
                         switch = "both") +

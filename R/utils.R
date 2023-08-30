@@ -55,8 +55,8 @@ markers3DtoLong <- function(markers,
   }
   markerCols <- dimnames(markers)[[3]]
   ## Create base data.frame for storing long format data.
-  markersLongBase <- expand.grid(snp = colnames(markers),
-                                 genotype = rownames(markers))
+  markersLongBase <- expand.grid(genotype = rownames(markers),
+                                 snp = colnames(markers))
   markersLong <- NULL
   for (parent in parents) {
     ## Get other columns containing parent.
@@ -68,9 +68,10 @@ markers3DtoLong <- function(markers,
     ## Compute probability for parent.
     ## (2 * pPar + psubPar) / 2
     markersParent[["prob"]] <-
-      c(markers[, , parent] +
+      c(markers[, , parent] + as.numeric(
           apply(X = markers[, , parentSubCols, drop = FALSE],
-                MARGIN = 1:2, FUN = sum) / 2)
+                MARGIN = 2:1, FUN = sum) / 2)
+      )
     ## Add to markersLong
     markersLong <- rbind(markersLong, markersParent)
   }

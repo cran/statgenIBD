@@ -22,9 +22,10 @@ allGenoPlot <- function(markers,
   ## Get positions of start of new chromosomes.
   newChrs <- which(!duplicated(map[["chr"]]))[-1] - 0.5
   p <- ggplot2::ggplot(data = plotDat,
-                       ggplot2::aes_string(x = "marker", y = "genotype",
-                                           alpha = "maxVal",
-                                           fill = "maxPar"))+
+                       ggplot2::aes(x = .data[["marker"]],
+                                    y = .data[["genotype"]],
+                                    alpha = .data[["maxVal"]],
+                                    fill = .data[["maxPar"]]))+
     ggplot2::geom_raster() +
     ggplot2::labs(title = title, x = "Genome", y = "Genotypes",
                   fill = "Parent", alpha = "Probability") +

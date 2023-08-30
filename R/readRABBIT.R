@@ -15,10 +15,12 @@
 #' imported information in the imported .csv file.
 #'
 #' @examples
+#' \dontrun{
 #' ## Read RABBIT data for barley.
 #' genoFile <- system.file("extdata/barley", "barley_magicReconstruct.zip",
 #'                        package = "statgenIBD")
 #' barleyIBD <- readRABBIT(unzip(genoFile, exdir = tempdir()))
+#' }
 #'
 #' @references Zheng, Chaozhi, Martin P Boer, and Fred A Van Eeuwijk.
 #' “Recursive Algorithms for Modeling Genomic Ancestral Origins in a Fixed

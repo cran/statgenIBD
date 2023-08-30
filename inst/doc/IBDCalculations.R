@@ -49,8 +49,7 @@ plot(SxMIBD,
 ## ----plotsxmIBDAll----------------------------------------------------------------------
 ## Visualize IBD probabilities for all genotypes.
 plot(SxMIBD, 
-     plotType = "allGeno",
-     genotype = "dh005")
+     plotType = "allGeno")
 
 ## ----plotsxmIBDMP-----------------------------------------------------------------------
 ## Visualize coverage across genome.

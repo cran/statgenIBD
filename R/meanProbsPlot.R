@@ -41,8 +41,10 @@ meanProbsPlot <- function(markers,
     title <- "Coverage per parent"
   }
   p <- ggplot2::ggplot(plotDat,
-                       ggplot2::aes_string(x = "cumPos", y = "Freq",
-                                           color = "Var2", group = "Var2")) +
+                       ggplot2::aes(x = .data[["cumPos"]],
+                                    y = .data[["Freq"]],
+                                    color = .data[["Var2"]],
+                                    group = .data[["Var2"]])) +
     ggplot2::geom_line() +
     ggplot2::labs(x = "Position", y = "Representation", title = title) +
     ggplot2::scale_color_discrete(name = "parent") +

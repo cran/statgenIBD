@@ -25,10 +25,12 @@ It is possible to additionally read the pedigree file that is also used by
 RABBIT. Reading this file allows for plotting the pedigree.
 }
 \examples{
+\dontrun{
 ## Read RABBIT data for barley.
 genoFile <- system.file("extdata/barley", "barley_magicReconstruct.zip",
                        package = "statgenIBD")
 barleyIBD <- readRABBIT(unzip(genoFile, exdir = tempdir()))
+}
 
 }
 \references{

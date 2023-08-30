@@ -146,20 +146,22 @@ pedPlot <- function(pedigree,
   ## Segments, arrows, labels and text separately and an additional
   ## segment for the arrow in the explanation part.
   p <- ggplot2::ggplot(arrowDat,
-                       ggplot2::aes_string(x = "xPos.y", y = "yPos.y")) +
-    ggplot2::geom_segment(ggplot2::aes_string(xend = "xPos.x",
-                                              yend = "yPos.x",
-                                              linetype = "linetype"),
+                       ggplot2::aes(x = .data[["xPos.y"]],
+                                    y = .data[["yPos.y"]])) +
+    ggplot2::geom_segment(ggplot2::aes(xend = .data[["xPos.x"]],
+                                       yend = .data[["yPos.x"]],
+                                       linetype = .data[["linetype"]]),
                           size = 1, color = "blue") +
-    ggplot2::geom_segment(ggplot2::aes_string(xend = "(xPos.x + xPos.y) / 2",
-                                              yend = "(yPos.x + yPos.y) / 2"),
-                          size = 1, color = "blue",
-                          data = arrowDat[arrowDat[["linetype"]] == "solid", ],
-                          arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"),
-                                                 type = "closed")) +
-    ggplot2::geom_label(ggplot2::aes_string(label = "ID"),
+    ggplot2::geom_segment(
+      ggplot2::aes(xend = (.data[["xPos.x"]] + .data[["xPos.y"]]) / 2,
+                   yend = (.data[["yPos.x"]] + .data[["yPos.y"]]) / 2),
+      size = 1, color = "blue",
+      data = arrowDat[arrowDat[["linetype"]] == "solid", ],
+      arrow = ggplot2::arrow(length = ggplot2::unit(0.3, "cm"),
+                             type = "closed")) +
+    ggplot2::geom_label(ggplot2::aes(label = .data[["ID"]]),
                         data = labDat, fill = "white") +
-    ggplot2::geom_text(ggplot2::aes_string(label = "text"),
+    ggplot2::geom_text(ggplot2::aes(label = .data[["text"]]),
                        data = textDat) +
     ggplot2::geom_segment(x = 0, y = plotRows - 0.2, xend = 0, yend  = 1.2,
                           size = 1, color = "blue", arrow = ggplot2::arrow()) +

@@ -24,8 +24,9 @@ totalCoveragePlot <- function(markers,
     title <- "Total coverage per parent"
   }
   p <- ggplot2::ggplot(plotDat,
-                       ggplot2::aes_string(x = "parent", y = "coverage",
-                                           fill = "parent")) +
+                       ggplot2::aes(x = .data[["parent"]],
+                                    y = .data[["coverage"]],
+                                    fill = .data[["parent"]])) +
     ggplot2::geom_col() +
     ggplot2::scale_y_continuous(expand = c(0, 0)) +
     ggplot2::labs(x = "parent", y = "Total coverage (%)", title = title) +

@@ -181,8 +181,7 @@ When specifying `plotType = "allGeno"` a plot is made of all genotypes colored p
 ```{r plotsxmIBDAll}
 ## Visualize IBD probabilities for all genotypes.
 plot(SxMIBD, 
-     plotType = "allGeno",
-     genotype = "dh005")
+     plotType = "allGeno")
 ```
 
 #### Plot the coverage of each parent across the genome.
