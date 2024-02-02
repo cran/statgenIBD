@@ -64,23 +64,27 @@ writeIBDs <- function(IBDprob,
     }, simplify = FALSE))
     markers <- aperm(markers, c(1, 3, 2))
   }
-  ## Create base data.frame for storing data.
-  markersLongBase <- expand.grid(Genotype = genoNames, Marker = markerNames)
-  markersLongBase <- markersLongBase[c("Marker", "Genotype")]
+  ## Use markers3DtoLong for summing homozygeous and heterozygeous probs.
+  mrkDat <- markers3DtoLong(markers = markers, parents = parents)
+  ## Create data for export.
+  exportDat <- reshape(mrkDat, direction  = "wide", v.names = "prob",
+                       timevar = "parent", idvar = c("snp", "genotype"))
+  exportDat <- exportDat[c("snp", "genotype", paste0("prob.", parents))]
+  colnames(exportDat) <- c("Marker", "Genotype", parents)
   for (parent in parents) {
     ## Format output.
     ## Trailing zeros are removed and number of decimals is adjusted.
-    markersLongBase[[parent]] <-
+    exportDat[[parent]] <-
       sub("\\.$", "",
           sub("0+$", "",
-              sprintf(markers[, , parent], fmt = fmt)
+              sprintf(exportDat[[parent]], fmt = fmt)
           )
       )
   }
   if (compress) {
     outFile <- paste0(outFile, ".gz")
   }
-  data.table::fwrite(markersLongBase, file = outFile,
+  data.table::fwrite(exportDat, file = outFile,
                      quote = FALSE, sep = "\t", na = "-", row.names = FALSE,
                      col.names = TRUE)
 }

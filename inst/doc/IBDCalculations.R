@@ -40,6 +40,11 @@ SxMIBD$markers["dh005", "abg313b", ]
 plot(SxMIBD,
      plotType = "pedigree")
 
+## ----plotsxmIBDmap----------------------------------------------------------------------
+### Visualize the genetic map.
+plot(SxMIBD,
+     plotType = "map")
+
 ## ----plotsxmIBD-------------------------------------------------------------------------
 ## Visualize IBD probabilities for dh005.
 plot(SxMIBD, 

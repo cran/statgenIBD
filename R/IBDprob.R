@@ -93,7 +93,7 @@ c.IBDprob <- function(...) {
   pedParNw <- unique(pedTot[pedTot[["par1"]] == 0 & pedTot[["par2"]] == 0, ])
   pedOffNw <- pedTot[pedTot[["par1"]] != 0 | pedTot[["par2"]] != 0, ]
   pedNw <- rbind(pedParNw, pedOffNw)
-  genoNw <- unlist(sapply(X = markerLst, FUN = rownames))
+  genoNw <- do.call(c, lapply(X = markerLst, FUN = rownames))
   nGeno <- sapply(X = markerLst, FUN = nrow)
   genoCross <- data.frame(cross = paste0("cross",
                                          rep(seq_along(nGeno), times = nGeno)),
@@ -119,19 +119,21 @@ c.IBDprob <- function(...) {
 
 #' Plot function for objects of class IBDprob
 #'
-#' Creates a plot for an object of class \code{IBDprob}. Three types of plot can
+#' Creates a plot for an object of class \code{IBDprob}. Six types of plot can
 #' be made:
 #' \itemize{
-#' \item{\code{singleGeno}}{ A plot for a single genotype showing the IBD
-#' probabilities for all parents across the genome.}
-#' \item{\code{allGeno}}{ A plot showing for all genotypes the IBD
-#' probabilities of the parent with the highest probability per marker.}
-#' \item{\code{pedigree}}{ A plot showing the structure of the pedigree of
-#' the population.}
-#' \item{\code{meanProbs}}{ A plot showing the coverage of each parent across
-#' the population.}
-#' \item{\code{totalCoverage}}{ A plot showing the total coverage of each
-#' parent.}
+#' \item \code{singleGeno} A plot for a single genotype showing the IBD
+#' probabilities for all parents across the genome.
+#' \item \code{allGeno} A plot showing for all genotypes the IBD
+#' probabilities of the parent with the highest probability per marker.
+#' \item \code{pedigree} A plot showing the structure of the pedigree of
+#' the population.
+#' \item \code{map} A plot of the genetic map showing the length of the
+#' chromosomes and the positions of the markers.
+#' \item \code{meanProbs} A plot showing the coverage of each parent across
+#' the population.
+#' \item \code{totalCoverage} A plot showing the total coverage of each
+#' parent.
 #' }
 #'
 #' @param x An object of class \code{IBDprob}.
@@ -175,6 +177,10 @@ c.IBDprob <- function(...) {
 #' plot(SxMIBD_Ext,
 #'      plotType = "pedigree")
 #'
+#' ## Plot genetic map.
+#' plot(SxMIBD_Ext,
+#'      plotType = "map")
+#'
 #' ## Plot coverage across population.
 #' plot(SxMIBD_Ext,
 #'      plotType = "meanProbs")
@@ -188,7 +194,7 @@ c.IBDprob <- function(...) {
 plot.IBDprob <- function(x,
                          ...,
                          plotType = c("singleGeno", "allGeno", "pedigree",
-                                      "meanProbs", "totalCoverage"),
+                                      "map", "meanProbs", "totalCoverage"),
                          genotype,
                          chr = NULL,
                          title = NULL,
@@ -216,12 +222,14 @@ plot.IBDprob <- function(x,
     }
     p <- pedPlot(pedigree = pedigree, offSpring = rownames(markers),
                  popType = popType, genoCross = genoCross, title = title)
+  } else if (plotType == "map") {
+    p <- geneticMapPlot(map = map, title = title, output = FALSE)
   } else if (plotType == "meanProbs") {
     p <- meanProbsPlot(markers = markers, map = map, parents = parents,
                        chr = chr, title = title)
   } else if (plotType == "totalCoverage") {
-     p <- totalCoveragePlot(markers = markers, map = map, parents = parents,
-                            chr = chr, title = title)
+    p <- totalCoveragePlot(markers = markers, map = map, parents = parents,
+                           chr = chr, title = title)
   }
   if (output) {
     plot(p)

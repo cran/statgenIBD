@@ -146,6 +146,7 @@ SxMIBD$markers["dh005", "abg313b", ]
 The calculated IBD probabilities can be visualized using the `plot` function. Several types of plot can be made using this function. Besides creating a plot, all plots also return a `ggplot` object that can be further customized.
 
 - a plot of the structure of the population for which the IBD probabilities were computed
+- a plot of the genetic map
 - a plot of the computed IBD probabilities per parent for a single genotype
 - a plot of the computed IBD probabilities across the genome for all genotypes
 - a plot of the coverage of each parent across the genome
@@ -161,6 +162,16 @@ A plot of the structure of the population for which the IBD probabilities were c
 ### Visualize the pedigree of the population.
 plot(SxMIBD,
      plotType = "pedigree")
+```
+
+#### Genetic map plot
+
+It is also possible to plot the genetic map by specifying `plotType = "map"`. This will show the length of the chromosomes and the position of the markers on the chromosomes.
+
+```{r plotsxmIBDmap}
+### Visualize the genetic map.
+plot(SxMIBD,
+     plotType = "map")
 ```
 
 #### Single genotype plot

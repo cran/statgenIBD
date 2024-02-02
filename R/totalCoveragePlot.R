@@ -16,7 +16,9 @@ totalCoveragePlot <- function(markers,
     markers <- markers[, colnames(markers) %in% rownames(map), ]
   }
   ## Compute means.
-  plotDat <- apply(X = markers, MARGIN = c(2, 3), FUN = mean)
+  mrkDat <- markers3DtoLong(markers = markers, parents = parents)
+  plotDat <- tapply(X = mrkDat$prob, INDEX = list(mrkDat$snp, mrkDat$parent),
+                    FUN = mean)
   plotDat <- data.frame(parent = parents,
                         coverage = 100 * colMeans(plotDat))
   ## Construct title.

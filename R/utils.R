@@ -70,7 +70,7 @@ markers3DtoLong <- function(markers,
     markersParent[["prob"]] <-
       c(markers[, , parent] + as.numeric(
           apply(X = markers[, , parentSubCols, drop = FALSE],
-                MARGIN = 2:1, FUN = sum) / 2)
+                MARGIN = 1:2, FUN = sum) / 2)
       )
     ## Add to markersLong
     markersLong <- rbind(markersLong, markersParent)
