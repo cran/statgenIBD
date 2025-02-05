@@ -26,6 +26,8 @@ expect_error(readRABBIT(infile = unzip(genoFile, exdir = tempdir()),
              "pedFile should be a character string indicating a readable")
 
 
+### RABBIT Mathematica version.
+
 ## Different combinations of inputs should give similar output.
 expect_silent(barleyMPP <-
                 readRABBIT(infile = unzip(genoFile, exdir = tempdir())))
@@ -43,9 +45,36 @@ expect_inherits(barleyMPP$markers, "array")
 expect_equal(dim(barleyMPP$markers), c(916, 355, 5))
 
 expect_inherits(attr(barleyMPP2, "genoCross"), "data.frame")
-expect_inherits(barleyMPP2$pedigree, "data.frame")
+expect_null(barleyMPP2$pedigree)
 
 ## map and markers should be the same for all.
 expect_equal(barleyMPP$map, barleyMPP2$map)
 expect_equal(barleyMPP$markers, barleyMPP2$markers)
 
+### RABBIT Julia version.
+
+## Define input files.
+
+genoFileJulia <- file.path(".", "example_magicreconstruct_ancestry.csv.gz")
+pedFileJulia <- file.path(".", "example_ped.csv")
+
+## Different combinations of inputs should give similar output.
+
+expect_silent(exMPP <- readRABBIT(infile = genoFileJulia))
+expect_silent(exMPP2 <- readRABBIT(infile = genoFileJulia, pedFile = pedFileJulia))
+
+## General structure.
+expect_inherits(exMPP, "IBDprob")
+
+expect_inherits(exMPP$map, "data.frame")
+expect_equal(dim(exMPP$map), c(12, 2))
+
+expect_inherits(exMPP$markers, "array")
+expect_equal(dim(exMPP$markers), c(15, 12, 4))
+
+expect_inherits(attr(exMPP, "genoCross"), "data.frame")
+expect_null(exMPP$pedigree)
+
+## map and markers should be the same for all.
+expect_equal(exMPP$map, exMPP2$map)
+expect_equal(exMPP$markers, exMPP2$markers)

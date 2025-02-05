@@ -10,7 +10,7 @@
 #' as pA + 0.5 * pAB. If \code{FALSE} both pA and pAB will be output without
 #' further calculations.
 #'
-#' @return A data.frame with IBD probabilities for the extracted markers in the
+#' @returns A data.frame with IBD probabilities for the extracted markers in the
 #' column and genotypes in the rows.
 #'
 #' @examples

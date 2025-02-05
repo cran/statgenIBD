@@ -61,7 +61,7 @@ using namespace ibd;
 //' @param verbose Should messages indicating the progress of the process be
 //' printed?
 //'
-//' @return An object of class \code{IBDprob}, a \code{list} with five elements,
+//' @returns An object of class \code{IBDprob}, a \code{list} with five elements,
 //' \describe{
 //' \item{map}{a \code{data.frame} with chromosome and position of the markers.}
 //' \item{markers}{a 3-dimensional \code{array} of IBD probabilities with

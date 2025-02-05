@@ -8,7 +8,7 @@
 #' @param outFileGeno A character string, the full path to the output genotype
 #' file.
 #'
-#' @return No output. Output files are written to a folder.
+#' @returns No output. Output files are written to a folder.
 #'
 #' @examples
 #' ## Compute IBD probabilities for Steptoe Morex.

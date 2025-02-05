@@ -15,7 +15,7 @@
 #' the probabilities sum up to one.
 #' @param compress Should the output be compressed to .gz format?
 #'
-#' @return No output. The output file is created as a result of calling this
+#' @returns No output. The output file is created as a result of calling this
 #' function.
 #'
 #' @examples

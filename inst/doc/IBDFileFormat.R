@@ -24,9 +24,9 @@ ibds <- read.delim(ibdFile)
 knitr::kable(head(ibds))
 
 ## ----eval=FALSE-------------------------------------------------------------------------
-#  ## Write IBDs to file, set values <0.05 to zero and only print 3 decimals.
-#  writeIBDs(IBDprob = SxMIBD, outFile = tempfile(fileext = ".txt"),
-#            decimals = 3, minProb = 0.05)
+# ## Write IBDs to file, set values <0.05 to zero and only print 3 decimals.
+# writeIBDs(IBDprob = SxMIBD, outFile = tempfile(fileext = ".txt"),
+#           decimals = 3, minProb = 0.05)
 
 ## ----SxMreadIBD-------------------------------------------------------------------------
 ## Get map.

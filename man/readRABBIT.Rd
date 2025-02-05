@@ -20,7 +20,8 @@ An \code{IBDprob} object with map and markers corresponding to the
 imported information in the imported .csv file.
 }
 \description{
-Read a file with IBD probabilities computed by the RABBIT software package.
+Read a file with IBD probabilities computed by the RABBIT software package,
+see \href{https://github.com/Biometris/RABBIT}{RABBIT} for details.
 It is possible to additionally read the pedigree file that is also used by
 RABBIT. Reading this file allows for plotting the pedigree.
 }

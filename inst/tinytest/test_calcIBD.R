@@ -69,3 +69,14 @@ expect_silent(SxMIBD_evalPosChr <-
 
 expect_equal_to_reference(SxMIBD_evalPosChr, "SxMIBD_evalPosChr")
 
+## Test calculating IBDs for simulated populations.
+
+testPopFolders <- list.dirs(".")
+testPopFolders <- testPopFolders[startsWith(testPopFolders, "./pop")]
+testPops <- substring(testPopFolders, first = 6)
+
+for (i in seq_along(testPops)) {
+  expect_silent(calcIBD(popType = testPops[i],
+                        markerFile = file.path(testPopFolders[i], "markers.txt"),
+                        mapFile = file.path(testPopFolders[i], "map.txt")))
+}

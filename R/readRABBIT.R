@@ -1,6 +1,7 @@
 #' Read IBD probabilities
 #'
-#' Read a file with IBD probabilities computed by the RABBIT software package.
+#' Read a file with IBD probabilities computed by the RABBIT software package,
+#' see [RABBIT](https://github.com/Biometris/RABBIT) for details.
 #' It is possible to additionally read the pedigree file that is also used by
 #' RABBIT. Reading this file allows for plotting the pedigree.
 #'
@@ -11,7 +12,7 @@
 #' information as used by RABBIT as input. Compressed .csv files with extension
 #' ".gz" or ".bz2" are supported as well.
 #'
-#' @return An \code{IBDprob} object with map and markers corresponding to the
+#' @returns An \code{IBDprob} object with map and markers corresponding to the
 #' imported information in the imported .csv file.
 #'
 #' @examples
@@ -64,10 +65,9 @@ readRABBIT <- function(infile,
   founderProbs <- rabbitRes$founderProbs
   genoNames <- rownames(founderProbs)
   parents <- dimnames(founderProbs)[[3]]
+  popType <- "RABBIT"
   if (is.null(pedFile) && is.null(rabbitRes$pedDat)) {
     genoCross <- NULL
-    popType <- "RABBIT"
-    pedDat <- NULL
   } else {
     if (is.null(rabbitRes$pedDat)) {
       ## Read pedigree.
@@ -83,61 +83,13 @@ readRABBIT <- function(infile,
     ## Construct genoCross.
     genoCross <- offDat[c("MemberID", "Generation")]
     colnames(genoCross) <- c("cross", "geno")
-    ## Remove offspring.
-    pedDat <- pedDat[!is.na(pedDat[["MotherID"]]), ]
-    ## Generation is read as character because of presence of 2nd table.
-    ## Convert to numeric so max works as expected.
-    suppressWarnings(pedDat[["Generation"]] <- as.numeric(pedDat[["Generation"]]))
-    ## Split in generation0 and everything else.
-    gen0 <- pedDat[pedDat[["Generation"]] == 0, ]
-    gen1 <- pedDat[pedDat[["Generation"]] > 0 &
-                     pedDat[["MotherID"]] != pedDat[["FatherID"]], ]
-    ## Compress selfing levels at the end.
-    gen2 <- pedDat[pedDat[["Generation"]] > 0 &
-                     pedDat[["MotherID"]] == pedDat[["FatherID"]], ]
-    ## Get number of selfing levels for popType.
-    nSelf <- length(unique(gen2[["Generation"]]))
-    popType <- paste0("F", nSelf)
-    gen2[["MotherID"]] <- gen2[gen2[["Generation"]] == min(gen2[["Generation"]]),
-                               "MotherID"]
-    gen2[["FatherID"]] <- gen2[gen2[["Generation"]] == min(gen2[["Generation"]]),
-                               "FatherID"]
-    gen2 <- gen2[gen2[["Generation"]] == max(gen2[["Generation"]]), ]
-    ## Set ID.
-    gen0[["ID"]] <- parents
-    gen1[["ID"]] <- paste0("H", 1:(nrow(gen1)))
-    ## Set type.
-    gen0[["type"]] <- "INBPAR"
-    gen1[["type"]] <- paste0("HYBRID", gen1[["Generation"]])
-    pedDat <- rbind(gen0, gen1)
-    ## Get parents.
-    pedDat[["par1"]] <- pedDat[["ID"]][match(pedDat[["MotherID"]],
-                                             table = pedDat[["MemberID"]])]
-    pedDat[["par2"]] <- pedDat[["ID"]][match(pedDat[["FatherID"]],
-                                             table = pedDat[["MemberID"]])]
-    pedDat[is.na(pedDat[["par1"]]), "par1"] <- 0
-    pedDat[is.na(pedDat[["par2"]]), "par2"] <- 0
-    ## Set parents for offDat through gen2.
-    gen2[["par1"]] <- pedDat[["par1"]][match(gen2[["MotherID"]],
-                                             table = pedDat[["MemberID"]])]
-    gen2[["par2"]] <- pedDat[["par2"]][match(gen2[["FatherID"]],
-                                             table = pedDat[["MemberID"]])]
-    offDat[["par1"]] <- gen2[["par1"]][match(offDat[["MemberID"]],
-                                             table = gen2[["MemberID"]])]
-    offDat[["par2"]] <- gen2[["par2"]][match(offDat[["MemberID"]],
-                                             table = gen2[["MemberID"]])]
-    ## Remove last generation from pedDat.
-    pedDat <- pedDat[pedDat[["Generation"]] != max(pedDat[["Generation"]]), ]
-    offDat[["type"]] <- popType
-    pedDat <- rbind(pedDat, offDat)
-    pedDat <- pedDat[c("ID", "par1", "par2", "type")]
   }
   ## Create IBDprob object.
   res <- structure(list(map = map,
                         markers = founderProbs,
                         popType = popType,
                         parents = parents,
-                        pedigree = pedDat),
+                        pedigree = NULL),
                    class = c("IBDprob", "list"),
                    genoCross = genoCross)
   return(res)
@@ -191,8 +143,8 @@ readRABBITJulia <- function(infile) {
                               nrows = rabbitHeaderLineIndexes$designinfo$numLines,
                               data.table = FALSE,
                               header = TRUE)
-  colnames(pedDat) <- c("MemberID", "MotherID", "FatherID",
-                        "Gender", "Generation")
+  colnames(pedDat) <- c("MemberID", "MotherID", "FatherID")
+  pedDat[["Generation"]] <- 0
   ## Get the founders.
   founderInfo <-
     data.table::fread(infile,
@@ -207,9 +159,8 @@ readRABBITJulia <- function(infile) {
                       nrows = rabbitHeaderLineIndexes$offspringinfo$numLines,
                       data.table = FALSE,
                       header = TRUE)
-  offPed <- offspringInfo #<- offspringInfo[!offspringInfo[["isoutlier"]], ]
-  colnames(offPed) <- c("Generation", "MemberID", "MotherID", "FatherID",
-                        "Gender")
+  offPed <- offspringInfo[c("individual", "member")]
+  colnames(offPed) <- c("Generation", "MemberID")
   offPed[["MotherID"]] <- offPed[["FatherID"]] <- NA
   pedDat <- rbind(pedDat, offPed)
   ## Get the markers.
@@ -220,7 +171,7 @@ readRABBITJulia <- function(infile) {
                       data.table = FALSE,
                       header = TRUE)
   ## Extract map.
-  map <- data.frame(chr = as.numeric(founderGeno[, 2]),
+  map <- data.frame(chr = founderGeno[, 2],
                     pos = as.numeric(founderGeno[, 3]),
                     row.names = as.character(founderGeno[, 1]))
   ## Prepare 3D array.
@@ -229,9 +180,9 @@ readRABBITJulia <- function(infile) {
   nFounders <- nrow(founderInfo)
   founderProbs <- array(data = NA_real_,
                         dim = c(nOffspring, nMarkers, nFounders),
-                        dimnames = list(offspringInfo$individual,
-                                        founderGeno$marker,
-                                        founderInfo$individual))
+                        dimnames = list(offspringInfo[["individual"]],
+                                        founderGeno[["marker"]],
+                                        founderInfo[["individual"]]))
   ## Fill the 3D array (offspring, markers, founders).
   chrStart <- 1
   chrLength <- 0
@@ -250,7 +201,9 @@ readRABBITJulia <- function(infile) {
     probabilities <- as.numeric(stringi::stri_split_regex(haploProb[[7]], "[|]",
                                                           simplify = TRUE))
     mat <- Matrix::sparseMatrix(i = markerindex, j = haploindex,
-                                x = probabilities, check = FALSE)
+                                x = probabilities,
+                                dims = c(haploProb[[3]], haploProb[[4]]),
+                                check = FALSE)
     if (i %% nOffspring == 1) {
       chrStart <- chrStart + chrLength
       chrLength <- dim(mat)[1]
@@ -291,3 +244,4 @@ getRabbitHeaderLines <- function(filepath) {
   close(con)
   return(magicHeaders);
 }
+

@@ -132,19 +132,19 @@ SxM_probs <- getProbs(SxMIBD, markers = c("plc", "ABG053"))
 head(SxM_probs)
 
 ## ----SxMwriteIBD, eval=FALSE------------------------------------------------------------
-#  ## Write IBDs to tab-delimited .txt file.
-#  writeIBDs(SxMIBD_Ext, "SxMIBD_Ext.txt")
+# ## Write IBDs to tab-delimited .txt file.
+# writeIBDs(SxMIBD_Ext, "SxMIBD_Ext.txt")
 
 ## ----SxMreadIBD, eval=FALSE-------------------------------------------------------------
-#  ## Read IBDs from tab-delimited .txt file.
-#  SxMIBD_Ext <- readIBDs("SxMIBD_Ext.txt", map = SxMIBD_Ext$map)
-#  summary(SxMIBD_Ext)
+# ## Read IBDs from tab-delimited .txt file.
+# SxMIBD_Ext <- readIBDs("SxMIBD_Ext.txt", map = SxMIBD_Ext$map)
+# summary(SxMIBD_Ext)
 
 ## ----SxMwriteFlapjack, eval=FALSE-------------------------------------------------------
-#  ## Write results to Flapjack format.
-#  writeFlapjack(SxMIBD_Ext,
-#                outFileMap = "map.txt",
-#                outFileGeno = "geno.txt")
+# ## Write results to Flapjack format.
+# writeFlapjack(SxMIBD_Ext,
+#               outFileMap = "map.txt",
+#               outFileGeno = "geno.txt")
 
 ## ----F4IBD------------------------------------------------------------------------------
 ## Compute IBD probabilities for simulated F4 population.
@@ -238,10 +238,6 @@ barleyIBD <- readRABBIT(infile = inFile,
 ## ----sumPbarleyIBD----------------------------------------------------------------------
 ## Summary.
 summary(barleyIBD)
-
-## ----plotPbarleyIBD---------------------------------------------------------------------
-## Plot structure of the pedigree.
-plot(barleyIBD, plotType = "pedigree")
 
 ## ----winddown, include = FALSE------------------------------------------------
 options(op)

@@ -13,7 +13,7 @@
 #' Marker names should be in the row names. These should match the marker names
 #' in the input file.
 #'
-#' @return An object of class \code{IBDprob}.
+#' @returns An object of class \code{IBDprob}.
 #'
 #' @examples
 #' ## Read map for Steptoe Morex.

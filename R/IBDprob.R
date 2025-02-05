@@ -7,7 +7,7 @@
 #' @param object An object of class \code{IBDprob}.
 #' @param ... Not used.
 #'
-#' @return No return value, a summary is printed.
+#' @returns No return value, a summary is printed.
 #'
 #' @examples
 #' ## Compute IBD probabilities for Steptoe Morex.
@@ -39,7 +39,7 @@ summary.IBDprob <- function(object,
 #'
 #' @param ... Objects of class \code{IBDprob}.
 #'
-#' @return An object of class \code{IBDprob} containing data for all
+#' @returns An object of class \code{IBDprob} containing data for all
 #' concatenated objects.
 #'
 #' @examples
@@ -150,7 +150,7 @@ c.IBDprob <- function(...) {
 #' @param output Should the plot be output to the current device? If
 #' \code{FALSE}, only a ggplot object is invisibly returned.
 #'
-#' @return A ggplot object is invisibly returned.
+#' @returns A ggplot object is invisibly returned.
 #'
 #' @examples
 #' \dontrun{

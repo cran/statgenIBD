@@ -468,7 +468,9 @@ plot(ABC, plotType = "allGeno")
 
 ## Importing IBD probabilities computed using RABBIT {#rab}
 
-Instead of performing IBD calculations directly with the package, it is also possible to import IBD probabilities computed using RABBIT software [@Zheng2014; @Zheng2015; @Zheng2018]. The main advantage of using RABBIT for IBD calculations is that it can handle complex pedigree populations and therefore can also be used in cases where the population structure is more complex than those that can be computed using `statgenIBD`, e.g. in the maize Steptoe Morex population described before.
+Instead of performing IBD calculations directly with the package, it is also possible to import IBD probabilities computed using [RABBIT](https://github.com/Biometris/RABBIT)  software [@Zheng2014; @Zheng2015; @Zheng2018]. 
+
+The main advantage of using RABBIT for IBD calculations is that it can handle complex pedigree populations and therefore can also be used in cases where the population structure is more complex than those that can be computed using `statgenIBD`, e.g. in the maize Steptoe Morex population described before.
 
 As an example we use a barley population described in @Liller2017-jz. This MPP design consists of 5 parents. Four wild parents were crossed with the cultivar Morex and then backcrossed with Morex once. Individuals from the four families from the backcrosses were then crossed with each other as in a full diallel design, which generated six F6 families through five generations of selfing. The data for this population is available in zipped format in the package.
 
@@ -496,11 +498,6 @@ As for the previous examples, we can summarize and plot the imported data to get
 ## Summary.
 summary(barleyIBD)
 ```
-
-```{r plotPbarleyIBD}
-## Plot structure of the pedigree.
-plot(barleyIBD, plotType = "pedigree")
-``` 
 
 ```{r winddown, include = FALSE}
 options(op)
