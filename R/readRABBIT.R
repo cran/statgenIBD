@@ -41,6 +41,15 @@ readRABBIT <- function(infile,
          tools::file_ext(tools::file_path_sans_ext(infile)) == "csv"))) {
     stop("infile should be a character string indicating a readable .csv file")
   }
+  if (tools::file_ext(infile) == "gz") {
+    tempFile <- tempfile()
+    R.utils::gunzip(infile, destname = tempFile, remove = FALSE)
+    infile <- tempFile
+  } else if (tools::file_ext(infile) == "bz2") {
+    tempFile <- tempfile()
+    R.utils::bunzip2(infile, destname = tempFile, remove = FALSE)
+    infile <- tempFile
+  }
   if (!is.null(pedFile) &&
       (!is.character(pedFile) || length(pedFile) > 1 ||
        file.access(pedFile, mode = 4) == -1 ||
@@ -146,10 +155,11 @@ readRABBITJulia <- function(infile) {
   colnames(pedDat) <- c("MemberID", "MotherID", "FatherID")
   pedDat[["Generation"]] <- 0
   ## Get the founders.
-  founderInfo <-
+  ## Use haploprob since there both inbred and outbred founders are tabulated.
+  haplotypes <-
     data.table::fread(infile,
-                      skip = rabbitHeaderLineIndexes$founderinfo$lineNr,
-                      nrows = rabbitHeaderLineIndexes$founderinfo$numLines,
+                      skip = rabbitHeaderLineIndexes$haplotype$lineNr,
+                      nrows = rabbitHeaderLineIndexes$haplotype$numLines,
                       data.table = FALSE,
                       header = TRUE)
   ## Get the offspring.
@@ -177,12 +187,12 @@ readRABBITJulia <- function(infile) {
   ## Prepare 3D array.
   nMarkers <- nrow(founderGeno)
   nOffspring <- nrow(offspringInfo)
-  nFounders <- nrow(founderInfo)
+  nFounders <- nrow(haplotypes)
   founderProbs <- array(data = NA_real_,
                         dim = c(nOffspring, nMarkers, nFounders),
                         dimnames = list(offspringInfo[["individual"]],
                                         founderGeno[["marker"]],
-                                        founderInfo[["individual"]]))
+                                        haplotypes[["haplotype"]]))
   ## Fill the 3D array (offspring, markers, founders).
   chrStart <- 1
   chrLength <- 0
@@ -228,11 +238,11 @@ getRabbitHeaderLines <- function(filepath) {
     line <- readLines(con, n = 1)
     curHeaderLineCount <- curHeaderLineCount + 1
     if (!length(line)) {
-      magicHeaders[[curHeader]]$numLines = curHeaderLineCount - 2
+      magicHeaders[[curHeader]]$numLines <- curHeaderLineCount - 2
       break
-    } else if (!is.null(line) & startsWith(line, "RABBIT,")) {
+    } else if (!is.null(line) && startsWith(line, "RABBIT,")) {
       if (!is.null(curHeader)) {
-        magicHeaders[[curHeader]]$numLines = curHeaderLineCount - 2
+        magicHeaders[[curHeader]]$numLines <- curHeaderLineCount - 2
       }
       header <- gsub("RABBIT,", "", line)
       curHeader <- header

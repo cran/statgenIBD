@@ -8,6 +8,7 @@
 downloads](https://cranlogs.r-pkg.org/badges/statgenIBD)](https://www.r-pkg.org/pkg/statgenIBD)
 [![R-CMD-check](https://github.com/Biometris/statgenIBD/workflows/R-CMD-check/badge.svg)](https://github.com/Biometris/statgenIBD/actions?workflow=R-CMD-check)
 [![codecov](https://codecov.io/gh/Biometris/statgenIBD/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Biometris/statgenIBD)
+[![DOI](https://zenodo.org/badge/393325500.svg)](https://doi.org/10.5281/zenodo.14810487)
 
 **statgenIBD** is an R package for calculating Identity By Descent (IBD)
 probabilities for biparental, three and four-way crosses. Calculations
