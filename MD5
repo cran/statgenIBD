@@ -1,6 +1,6 @@
-02382c83242b586402eb48e37ee76c2c *DESCRIPTION
+1a98ed095c2fd92974da1c42d210112a *DESCRIPTION
 c48ee1d399c46d587b9ce78b93e6ff36 *NAMESPACE
-d15dd0f726513e792ab2ee26559e0461 *NEWS.md
+cc80d356187a6ecb4426da07ea49186b *NEWS.md
 9c3e266b34ddef13ddad69457866fd4e *R/IBDprob.R
 c5463254fb3df80c1b3dd0de0175b96c *R/RcppExports.R
 bfcceea6945336efcc89c63301762acb *R/allGenoPlot.R
@@ -18,15 +18,15 @@ fc3ad8e35a50c7b94ef1eaeaabaa983f *R/utils.R
 f93198e98648067bb95ba40c69fc12bd *R/writeIBDs.R
 f2cd2d044d828ad5bf57994f27c9e1e3 *R/zzz.R
 780b99917840aacb8e3b5c1f5eb90119 *README.md
-9d40159f50a5fc9949cbfe95a2884126 *build/partial.rdb
-96eab14648b8e01566b80468f5c3283f *build/vignette.rds
+d54042561b90aafd8a9a202ea63e1e4b *build/partial.rdb
+8a6ccfcfc8fb5a5ebc531f8fa7fa2c6b *build/vignette.rds
 f3890ffa98cf5516421a5ed09a2b14c2 *cleanup
 376fbb7f0ecd6f8f2d2eb3bcaed8c156 *inst/doc/IBDCalculations.R
 b63fbf368969be5277304cc40919b8f1 *inst/doc/IBDCalculations.Rmd
-6052e89c15f03dfb3d201d1df3bcd1c6 *inst/doc/IBDCalculations.html
+e9643384487c2e1491d9e214db4abbed *inst/doc/IBDCalculations.html
 050b0da0a35b70b7f2686caa1d436774 *inst/doc/IBDFileFormat.R
 13336322ea8c7670b5694e2d03271493 *inst/doc/IBDFileFormat.Rmd
-48b73006af8d5394d9cc434652a0df8b *inst/doc/IBDFileFormat.html
+b8b0e1534b6ae7ea450caf7fdb7af2b0 *inst/doc/IBDFileFormat.html
 fde3a6cf9efea6888862e4c963cc5514 *inst/extdata/SxM/SxM_IBDs.txt
 748ebe3ce7bf92423860c1f4618ebdee *inst/extdata/SxM/SxM_eval.txt
 2038f5a11a102fbabbfb2a9de6807556 *inst/extdata/SxM/SxM_geno.txt
@@ -91,7 +91,7 @@ d0081008a5aefd1da45b201584e8e5fc *inst/tinytest/test_writeFlapjack.R
 9125a3c2f5518b784c8f7e57ed00dd5d *inst/tinytest/test_writeIBDs.R
 b245fb2d591585af668846c616325a0b *man/allGenoPlot.Rd
 95926030fefe11967c637588e88014b4 *man/c.IBDprob.Rd
-3ae349c2ef65c340596e79ccc31e3666 *man/calcIBD.Rd
+195591cf432376b325e07a77916ae3a1 *man/calcIBD.Rd
 3f766c842c561d2596831d93a0ca28cf *man/figures/logo.png
 0cc88e7a4ec6c1d1702a701642ed4132 *man/getProbs.Rd
 af568aba7ab85bbfeeab43ce6a24e49a *man/pedPlot.Rd
@@ -105,7 +105,7 @@ f12eb8d603acef643d56b89fd0129a57 *man/singleGenoPlot.Rd
 3fe012c809fe08c27c67a90a408b6935 *man/writeIBDs.Rd
 27db97d261773838b5c1ef6017688808 *src/Makevars
 284ad99621778641d35966f098e10ef5 *src/RcppExports.cpp
-93ea4928ce61032280aacd795460d2e8 *src/calcIBD.cpp
+6e48834689ca36d698afac03c60ddc32 *src/calcIBD.cpp
 c58b34916c6a36ce1f940feb30829313 *src/general/HMMalgo.cpp
 c8a368d16502c9b5f403d52640ed4fcb *src/general/HMMalgo.h
 c4bdb5caba1e650ced61494b04c49be5 *src/general/InhVector.cpp
