@@ -1,3 +1,8 @@
+# statgenIBD 1.0.11
+
+-   `readRabbit` now also reads inputs when pedigree is not specified directly in input file.
+-   Internal changes to accommodate upcoming Rcpp release
+
 # statgenIBD 1.0.10
 
 -   No user visual changes.  

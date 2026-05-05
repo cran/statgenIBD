@@ -99,14 +99,14 @@ using namespace ibd;
 List calcIBD(CharacterVector& popType,
              CharacterVector& markerFile,
              CharacterVector& mapFile,
-             Nullable<DataFrame&> evalPos = R_NilValue,
-             Nullable<NumericVector&> evalDist = R_NilValue,
+             Nullable<DataFrame> evalPos = R_NilValue,
+             Nullable<double> evalDist = R_NilValue,
              const bool& grid = true,
              const bool& verbose = false)
 {
   string _poptype = Rcpp::as<std::string>(popType);
   // only to check poptype has correct format:
-  const pop_base *popt = init_pop(_poptype);
+  [[maybe_unused]] const pop_base *popt = init_pop(_poptype);
 
   int x;
   bool isDH = _poptype.find("DH") != std::string::npos;
@@ -116,9 +116,7 @@ List calcIBD(CharacterVector& popType,
   arma::cube prob;
   vector<string> parents, offspring;
   vector<IndProp> pop;
-  double max_step_size = -1;
-  if (evalDist.isNotNull())
-    max_step_size = Rcpp::as<double>(evalDist);
+  double max_step_size = evalDist.isNotNull() ? as<double>(evalDist) : -1;
 
   try
   {
@@ -126,7 +124,7 @@ List calcIBD(CharacterVector& popType,
                    _poptype,
                    Rcpp::as<std::string>(markerFile),
                    Rcpp::as<std::string>(mapFile),
-                   evalPos,
+                   Rcpp::DataFrame(evalPos),
                    max_step_size,
                    grid,
                    verbose);

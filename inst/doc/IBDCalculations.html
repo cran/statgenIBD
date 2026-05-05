@@ -12,7 +12,7 @@
 
 <meta name="author" content="Bart-Jan van Rossum and Martin Boer" />
 
-<meta name="date" content="2026-03-02" />
+<meta name="date" content="2026-05-05" />
 
 <title>IBD calculations using statgenIBD</title>
 
@@ -151,7 +151,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; }
 div.csl-bib-body { }
 div.csl-entry {
 clear: both;
-margin-bottom: 0em;
 }
 .hanging div.csl-entry {
 margin-left:2em;
@@ -364,7 +363,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">IBD calculations using statgenIBD</h1>
 <h4 class="author">Bart-Jan van Rossum and Martin Boer</h4>
-<h4 class="date">2026-03-02</h4>
+<h4 class="date">2026-05-05</h4>
 
 
 
@@ -495,8 +494,7 @@ is variable, with its maximum value depicted in the last column.</p>
 </tbody>
 </table>
 <p>For IBD calculations of more complex population types, including
-MAGIC and population with complicated pedigree structure, see <a href="https://github.com/chaozhi/RABBIT">RABBIT</a> software <span class="citation">(<a href="#ref-Zheng2014">Zheng, Boer, and Van Eeuwijk
-2014</a>, <a href="#ref-Zheng2015">2015</a>, <a href="#ref-Zheng2018">2018</a>)</span>. The IBDs calculated using RABBIT
+MAGIC and population with complicated pedigree structure, see <a href="https://github.com/chaozhi/RABBIT">RABBIT</a> software <span class="citation">(<a href="#ref-Zheng2014">Zheng et al. 2014</a>, <a href="#ref-Zheng2015">2015</a>, <a href="#ref-Zheng2018">2018</a>)</span>. The IBDs calculated using RABBIT
 can be imported into statgenIBD as well, see <a href="#rab">Importing
 IBD probabilities computed using RABBIT</a>.</p>
 </div>
@@ -1084,8 +1082,7 @@ between the to crosses in <code>ABC</code>.</p>
 <h2><span class="header-section-number">4</span> Importing IBD
 probabilities computed using RABBIT</h2>
 <p>Instead of performing IBD calculations directly with the package, it
-is also possible to import IBD probabilities computed using <a href="https://github.com/Biometris/RABBIT">RABBIT</a> software <span class="citation">(<a href="#ref-Zheng2014">Zheng, Boer, and Van Eeuwijk
-2014</a>, <a href="#ref-Zheng2015">2015</a>, <a href="#ref-Zheng2018">2018</a>)</span>.</p>
+is also possible to import IBD probabilities computed using <a href="https://github.com/Biometris/RABBIT">RABBIT</a> software <span class="citation">(<a href="#ref-Zheng2014">Zheng et al. 2014</a>, <a href="#ref-Zheng2015">2015</a>, <a href="#ref-Zheng2018">2018</a>)</span>.</p>
 <p>The main advantage of using RABBIT for IBD calculations is that it
 can handle complex pedigree populations and therefore can also be used
 in cases where the population structure is more complex than those that
@@ -1128,19 +1125,16 @@ data to get a first idea of its content.</p>
 </div>
 <div id="references" class="section level2 unnumbered">
 <h2 class="unnumbered">References</h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Hayes1993" class="csl-entry">
-Hayes, P. M., B. H. Liu, S. J. Knapp, F. Chen, B. Jones, T. Blake, J.
-Franckowiak, et al. 1993. <span>“Quantitative Trait Locus Effects and
-Environmental Interaction in a Sample of North American Barley Germ
-Plasm.”</span> <em>Theoretical and Applied Genetics</em> 87 (3):
-392–401. <a href="https://doi.org/10.1007/bf01184929">https://doi.org/10.1007/bf01184929</a>.
+Hayes, P. M., B. H. Liu, S. J. Knapp, et al. 1993. <span>“Quantitative
+Trait Locus Effects and Environmental Interaction in a Sample of North
+American Barley Germ Plasm.”</span> <em>Theoretical and Applied
+Genetics</em> 87 (3): 392–401. <a href="https://doi.org/10.1007/bf01184929">https://doi.org/10.1007/bf01184929</a>.
 </div>
 <div id="ref-Huang2011" class="csl-entry">
-Huang, Xueqing, Maria-João Paulo, Martin Boer, Sigi Effgen, Paul Keizer,
-Maarten Koornneef, and Fred A Van Eeuwijk. 2011. <span>“<span class="nocase">Analysis of natural allelic variation in Arabidopsis
-using a multiparent recombinant inbred line population</span>.”</span>
-<a href="https://doi.org/10.1073/pnas.1100465108">https://doi.org/10.1073/pnas.1100465108</a>.
+Huang, Xueqing, Maria-João Paulo, Martin Boer, et al. 2011. <em><span class="nocase">Analysis of natural allelic variation in Arabidopsis
+using a multiparent recombinant inbred line population</span></em>. <a href="https://doi.org/10.1073/pnas.1100465108">https://doi.org/10.1073/pnas.1100465108</a>.
 </div>
 <div id="ref-Lander1987" class="csl-entry">
 Lander, Eric S., and Philip Green. 1987. <span>“<span class="nocase">Construction of multilocus genetic linkage maps in humans
@@ -1149,22 +1143,22 @@ reconstruction algorithm/human genetics/plant genetics)</span>.”</span>
 <em>Proc. Nati. Acad. Sci. USA</em> 84 (2): 2363–67. <a href="https://www.jstor.org/stable/29713">https://www.jstor.org/stable/29713</a>.
 </div>
 <div id="ref-Liller2017-jz" class="csl-entry">
-Liller, Corinna B, Agatha Walla, Martin P Boer, Pete Hedley, Malcolm
-Macaulay, Sieglinde Effgen, Maria von Korff, G Wilma van Esse, and
-Maarten Koornneef. 2017. <span>“Fine Mapping of a Major <span>QTL</span>
-for Awn Length in Barley Using a Multiparent Mapping Population.”</span>
-<em>Z<span>ü</span>chter Genet. Breed. Res.</em> 130 (2): 269–81. <a href="https://doi.org/10.1007/s00122-016-2807-y">https://doi.org/10.1007/s00122-016-2807-y</a>.
+Liller, Corinna B, Agatha Walla, Martin P Boer, et al. 2017. <span>“Fine
+Mapping of a Major <span>QTL</span> for Awn Length in Barley Using a
+Multiparent Mapping Population.”</span> <em>Z<span>ü</span>chter Genet.
+Breed. Res.</em> 130 (2): 269–81. <a href="https://doi.org/10.1007/s00122-016-2807-y">https://doi.org/10.1007/s00122-016-2807-y</a>.
 </div>
 <div id="ref-milne2010" class="csl-entry">
-Milne, I., P. Shaw, G. Stephen, M. Bayer, L. Cardle, W. T. B. Thomas, A.
-J. Flavell, and D. Marshall. 2010. <span>“Flapjack–Graphical Genotype
-Visualization.”</span> <em>Bioinformatics</em> 26 (24): 3133–34. <a href="https://doi.org/10.1093/bioinformatics/btq580">https://doi.org/10.1093/bioinformatics/btq580</a>.
+Milne, I., P. Shaw, G. Stephen, et al. 2010. <span>“Flapjack–Graphical
+Genotype Visualization.”</span> <em>Bioinformatics</em> 26 (24):
+3133–34. <a href="https://doi.org/10.1093/bioinformatics/btq580">https://doi.org/10.1093/bioinformatics/btq580</a>.
 </div>
 <div id="ref-VanEeuwijk2009" class="csl-entry">
-Van Eeuwijk, Fred A., Martin Boer, L. Radu Totir, Marco Bink, Deanne
-Wright, Christopher R. Winkler, Dean Podlich, et al. 2009. <span>“<span class="nocase">Mixed model approaches for the identification of QTLs
-within a maize hybrid breeding program</span>.”</span> <em>Theor. Appl.
-Genet. 2009 1202</em> 120 (2): 429–40. <a href="https://doi.org/10.1007/S00122-009-1205-0">https://doi.org/10.1007/S00122-009-1205-0</a>.
+Van Eeuwijk, Fred A., Martin Boer, L. Radu Totir, et al. 2009.
+<span>“<span class="nocase">Mixed model approaches for the
+identification of QTLs within a maize hybrid breeding
+program</span>.”</span> <em>Theor. Appl. Genet. 2009 1202</em> 120 (2):
+429–40. <a href="https://doi.org/10.1007/S00122-009-1205-0">https://doi.org/10.1007/S00122-009-1205-0</a>.
 </div>
 <div id="ref-Zheng2014" class="csl-entry">
 Zheng, Chaozhi, Martin P Boer, and Fred A Van Eeuwijk. 2014. <span>“A
@@ -1172,13 +1166,15 @@ General Modeling Framework for Genome Ancestral Origins in Multiparental
 Populations.”</span> <em>Genetics</em> 198 (1): 87–101. <a href="https://doi.org/10.1534/genetics.114.163006">https://doi.org/10.1534/genetics.114.163006</a>.
 </div>
 <div id="ref-Zheng2015" class="csl-entry">
-———. 2015. <span>“<span class="nocase">Reconstruction of Genome Ancestry
-Blocks in Multiparental Populations</span>.”</span> <em>Genetics</em>
-200 (4): 1073–87. <a href="https://doi.org/10.1534/GENETICS.115.177873">https://doi.org/10.1534/GENETICS.115.177873</a>.
+Zheng, Chaozhi, Martin P Boer, and Fred A Van Eeuwijk. 2015.
+<span>“<span class="nocase">Reconstruction of Genome Ancestry Blocks in
+Multiparental Populations</span>.”</span> <em>Genetics</em> 200 (4):
+1073–87. <a href="https://doi.org/10.1534/GENETICS.115.177873">https://doi.org/10.1534/GENETICS.115.177873</a>.
 </div>
 <div id="ref-Zheng2018" class="csl-entry">
-———. 2018. <span>“<span class="nocase">Recursive Algorithms for Modeling
-Genomic Ancestral Origins in a Fixed Pedigree</span>.”</span> <em>G3
+Zheng, Chaozhi, Martin P Boer, and Fred A Van Eeuwijk. 2018.
+<span>“<span class="nocase">Recursive Algorithms for Modeling Genomic
+Ancestral Origins in a Fixed Pedigree</span>.”</span> <em>G3
 Genes|Genomes|Genetics</em> 8 (10): 3231–45. <a href="https://doi.org/10.1534/G3.118.200340">https://doi.org/10.1534/G3.118.200340</a>.
 </div>
 </div>

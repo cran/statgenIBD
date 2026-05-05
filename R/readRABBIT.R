@@ -152,8 +152,15 @@ readRABBITJulia <- function(infile) {
                               nrows = rabbitHeaderLineIndexes$designinfo$numLines,
                               data.table = FALSE,
                               header = TRUE)
-  colnames(pedDat) <- c("MemberID", "MotherID", "FatherID")
-  pedDat[["Generation"]] <- 0
+  if (ncol(pedDat) == 3) {
+    colnames(pedDat) <- c("MemberID", "MotherID", "FatherID")
+    pedDat[["Generation"]] <- 0
+  } else if (ncol(pedDat) == 2) {
+    pedDat <- parseBreedCode(pedDat$designcode)
+    pedDat[["Generation"]] <- 0
+  } else {
+    pedDat <- NULL
+  }
   ## Get the founders.
   ## Use haploprob since there both inbred and outbred founders are tabulated.
   haplotypes <-
@@ -255,3 +262,79 @@ getRabbitHeaderLines <- function(filepath) {
   return(magicHeaders);
 }
 
+#' Helper function for parsing RABBIT breedCode. Modified version of julia
+#' function from RABBIT.
+#'
+#' @noRd
+#' @keywords internal
+parseBreedCode <- function(breedCode,
+                           fixedNself = 20) {
+  ## Split breedCode.
+  breedCodeSplit <- trimws(strsplit(breedCode, "=>", fixed = TRUE)[[1]])
+  pedCode <- breedCodeSplit[1]
+  nInbred <- breedCodeSplit[2]
+  ## Replace / by number of / in pedCode.
+  code0 <- gsub("/([1-9][0-9]*)/", ";\\1;", pedCode)
+  code0 <- gsub("/\\s*/", ";2;", code0)
+  code0 <- gsub("/", ";1;", code0, fixed = TRUE)
+  # Split code0 by semicolons and remove empty strings
+  code1 <- trimws(strsplit(code0, ";", fixed = TRUE)[[1]])
+  code1 <- code1[code1 != ""]
+  ## Initialize pedigree with founders.
+  ped <- lapply(unique(code1[seq(1, length(code1), by = 2)]),
+                function(i) c(MemberID = i, MotherID = "0", FatherID = "0"))
+  generations <- unique(code1[seq(2, length(code1), by = 2)])
+  ## Add offspring.
+  while (length(code1) > 0) {
+    genPos <- which(code1 %in% generations)
+    if (length(genPos) == 0) break
+    ## Process positions in reverse to maintain indices
+    for (idx in length(genPos):1) {
+      pos <- genPos[idx]
+      gen <- code1[pos]
+      delim <- switch(gen,
+                      "1" = "/",
+                      "2" = "//",
+                      sprintf("/%s/", gen))
+      mother <- code1[pos - 1]
+      father <- code1[pos + 1]
+      ind <- paste0(mother, delim, father)
+      # Handle duplicate individuals
+      if (gen >= 2 && ind %in% code1) {
+        k <- 2
+        ind2 <- sprintf("%s_%d", ind, k)
+        while (ind2 %in% code1) {
+          k <- k + 1
+          ind2 <- sprintf("%s_%d", ind, k)
+        }
+        ind <- ind2
+      }
+      ped[[length(ped) + 1]] <- c(MemberID = ind, MotherID = mother,
+                                  FatherID = father)
+      code1[pos - 1] <- ind
+      code1 <- code1[-(pos:(pos + 1))]
+    }
+  }
+  ## Parse nInbred.
+  if (is.na(try(as.numeric(nInbred)))) {
+    memCode <- paste0("_", toupper(nInbred))
+    nInbred <- if (toupper(nInbred) == "DH") 1 else fixedNself
+  } else {
+    memCode <- ""
+  }
+  ## Add selfing generations
+  p00 <- ped[[length(ped)]][1]
+  ped[[length(ped)]][1] <- paste0(p00, "_self0")
+  if (nInbred > 0) {
+    parent <- ped[[length(ped)]][1]
+    selfingRows <- data.frame(MemberID = paste0(p00, "_self", seq_len(nInbred)),
+                              MotherID = parent, FatherID = parent,
+                              row.names = NULL)
+    ped <- c(ped, split(selfingRows, seq_len(nrow(selfingRows))))
+  }
+  ped[[length(ped)]][1] <- paste0(ped[[length(ped)]][1], memCode)
+  ## Convert to data frame
+  pedDat <- do.call(rbind, ped)
+  rownames(pedDat) <- NULL
+  unique(pedDat)
+}
